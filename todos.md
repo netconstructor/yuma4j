@@ -1,6 +1,8 @@
 # TODOs
 
 * JSON serialization of AnnotationTree (custom serializer?)
+* Review/revise JavaDoc!
+* Make search results page URL bookmarkable
 * Pagination in annotation list views
 * Re-enable RDF publishing
 * Revise feed API

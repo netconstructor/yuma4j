@@ -18,7 +18,7 @@ public class StartAnnotationServer {
 
 		WebAppContext bb = new WebAppContext();
 		bb.setServer(server);
-		bb.setContextPath("/yuma-server");
+		bb.setContextPath("/yuma4j-server");
 		bb.setWar("src/main/webapp");
 		
 		server.addHandler(bb);

@@ -8,7 +8,9 @@
 * Revise feed API
 * 'Dump database' and 'Dump to RDF' feature (in the admin section)
 * Implement index-based operations in HibernateAnnotationStore using Hibernate Search
-* The 'created' and 'modified' properties should be set by the system, not via JSON! 
+* The 'created' and 'modified' properties should be set by the system, not via JSON!
+* Unit testing: Hibernate tests are now all in one method - split up into one test method per
+  HibernateAnnotationStore method
 * Unit testing: test annotation tree setup
 * Unit testing: test annotation tree DB retrieval
 * Wicket tooling for Web tests?

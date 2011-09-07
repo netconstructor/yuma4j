@@ -15,7 +15,7 @@ public class EmbeddedJAXRSServer {
     public static void startEmbeddedJaxrsServer(Class <?> clazz) {
     	TJWSEmbeddedJaxrsServer tjws = new TJWSEmbeddedJaxrsServer();
 		tjws.setBindAddress("localhost");
-		tjws.setRootResourcePath("/yuma-server");
+		tjws.setRootResourcePath("/yuma4j-server");
 		tjws.setPort(8081);
 		tjws.getDeployment().setResourceClasses(Collections.singletonList(clazz.getName()));
 		tjws.start();

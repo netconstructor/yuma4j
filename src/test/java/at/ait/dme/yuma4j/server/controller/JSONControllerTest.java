@@ -1,4 +1,4 @@
-package at.ait.dme.yuma4j.server.controller.json;
+package at.ait.dme.yuma4j.server.controller;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -17,7 +17,6 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
-import at.ait.dme.yuma4j.server.controller.EmbeddedJAXRSServer;
 import at.ait.dme.yuma4j.server.controller.JSONController;
 
 /**
@@ -26,7 +25,7 @@ import at.ait.dme.yuma4j.server.controller.JSONController;
  * @author Christian Sadilek
  * @author Rainer Simon
  */
-public class JSONAnnotationControllerTest {
+public class JSONControllerTest {
 	private static final String JSON_ANNOTATION_CONTROLLER_BASE_URL = 
 		"http://localhost:8080/yuma-server/api/annotation";
 

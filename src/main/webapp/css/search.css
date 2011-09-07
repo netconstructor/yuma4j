@@ -52,11 +52,13 @@ form {
 }
 
 .searchbutton input {
+	float:left;
+	width:80px;
 	background:none;
 	border:0px;
 	margin:0px;
-	padding:0px;
-	font-size:12px;
+	padding-top:4px;
+	font-size:13px;
 	color:#fff;
 	cursor:pointer;
 }

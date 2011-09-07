@@ -1,0 +1,35 @@
+apply plugin: 'java'
+apply plugin: 'war'
+apply plugin: 'eclipse'
+
+sourceCompatibility = 1.6
+
+files("src") 
+
+repositories {
+	mavenCentral()
+	mavenRepo urls: 'http://repository.jboss.org/nexus/content/groups/public/'
+}
+
+eclipse {
+	classpath {	
+		classesOutputDir = file('src/main/webapp/WEB-INF/classes')
+	}
+}
+
+dependencies {
+	providedCompile 'javax.servlet:servlet-api:2.5'
+	
+	compile 'org.jboss.resteasy:resteasy-jaxrs:2.2.1.GA'
+	compile 'org.hibernate:hibernate-entitymanager:3.5.6-Final'
+	compile 'org.apache.wicket:wicket:1.4.18'
+	compile 'org.apache.wicket:wicket-auth-roles:1.4.18'
+	compile 'org.codehaus.jackson:jackson-mapper-asl:1.8.5'
+	compile 'com.hp.hpl.jena:jena:2.6.4'
+	compile 'rome:rome:1.0'
+	compile 'rome:opensearch:0.1'
+	
+	testCompile 'junit:junit:4.8.2'
+	testCompile 'org.hsqldb:hsqldb:2.2.4'
+	testCompile 'org.mortbay.jetty:jetty:6.1.26'
+}

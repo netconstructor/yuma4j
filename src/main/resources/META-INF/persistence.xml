@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence xmlns="http://java.sun.com/xml/ns/persistence" version="1.0">
+
+    <persistence-unit name="production">   
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity</class>
+		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
+    	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+	        <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
+	        <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/ait"/>
+	        <property name="hibernate.hbm2ddl.auto" value="update"/>
+	        <property name="hibernate.show_sql" value="false"/>
+	        <property name="hibernate.connection.username" value="postgres"/>
+	        <property name="hibernate.connection.password" value="postgres"/>
+    	</properties>
+    </persistence-unit>
+
+	<persistence-unit name="test">   
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity</class>
+		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
+    	<exclude-unlisted-classes>true</exclude-unlisted-classes>
+		<properties>
+	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
+	        <property name="hibernate.connection.driver_class" value="org.hsqldb.jdbcDriver"/>
+	        <property name="hibernate.connection.url" value="jdbc:hsqldb:mem:unit-test-db"/>
+	        <property name="hibernate.dialect" value="org.hibernate.dialect.HSQLDialect"/>
+	        <property name="hibernate.connection.autocommit" value="false"/>
+	        <property name="hibernate.hbm2ddl.auto" value="create-drop"/>
+	        <property name="hibernate.connection.username" value="sa"/>
+	        <property name="hibernate.connection.password" value=""/>
+    	</properties>
+    </persistence-unit>
+    
+</persistence>

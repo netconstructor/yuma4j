@@ -1,6 +1,7 @@
 # TODOs
 
 * JSON serialization of AnnotationTree (custom serializer?)
+* Revise JSON controller (until all unit tests pass again)
 * Review/revise JavaDoc!
 * Make search results page URL bookmarkable
 * Pagination in annotation list views

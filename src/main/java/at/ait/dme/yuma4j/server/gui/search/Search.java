@@ -10,7 +10,6 @@ import org.apache.wicket.markup.html.link.BookmarkablePageLink;
 import org.apache.wicket.model.CompoundPropertyModel;
 
 import at.ait.dme.yuma4j.server.gui.admin.Dashboard;
-import at.ait.dme.yuma4j.server.gui.documentation.Overview;
 import at.ait.dme.yuma4j.server.gui.feeds.TimelinePage;
 
 /**
@@ -28,7 +27,6 @@ public class Search extends WebPage {
         add(new SearchForm("form", new Query()));
         add(new BookmarkablePageLink("link-timeline", TimelinePage.class));
         add(new BookmarkablePageLink("link-advanced", AdvancedSearch.class));
-        add(new BookmarkablePageLink("link-doc", Overview.class));
         add(new BookmarkablePageLink("link-login", Dashboard.class));
     }
         

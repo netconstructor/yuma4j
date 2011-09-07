@@ -8,10 +8,6 @@ import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 import at.ait.dme.yuma4j.server.gui.admin.Dashboard;
 import at.ait.dme.yuma4j.server.gui.admin.LoginPage;
 import at.ait.dme.yuma4j.server.gui.admin.LogoutPage;
-import at.ait.dme.yuma4j.server.gui.documentation.API;
-import at.ait.dme.yuma4j.server.gui.documentation.Contact;
-import at.ait.dme.yuma4j.server.gui.documentation.Developer;
-import at.ait.dme.yuma4j.server.gui.documentation.Overview;
 import at.ait.dme.yuma4j.server.gui.feeds.ObjectPage;
 import at.ait.dme.yuma4j.server.gui.feeds.RepliesPage;
 import at.ait.dme.yuma4j.server.gui.feeds.TimelinePage;
@@ -49,13 +45,6 @@ public class WicketApplication extends AuthenticatedWebApplication {
 				RepliesPage.class,
 				new String[]{RepliesPage.PARAM_PARENT_ID}
 		));
-
-		// Doc pages
-		this.mountBookmarkablePage("doc", Overview.class);
-		this.mountBookmarkablePage("doc/overview", Overview.class);
-		this.mountBookmarkablePage("doc/api", API.class);
-		this.mountBookmarkablePage("doc/developer", Developer.class);
-		this.mountBookmarkablePage("doc/contact", Contact.class);
 
 		// Admin area
 		this.mountBookmarkablePage("admin", Dashboard.class);

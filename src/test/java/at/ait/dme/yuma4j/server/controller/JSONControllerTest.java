@@ -16,18 +16,12 @@ import org.apache.http.impl.client.DefaultHttpClient;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
+import at.ait.dme.yuma4j.bootstrap.EmbeddedAnnotationServer;
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
-import at.ait.dme.yuma4j.server.controller.JSONController;
 
-/**
- * Tests for the AnnoteaAnnotationController
- *  
- * @author Christian Sadilek
- * @author Rainer Simon
- */
 public class JSONControllerTest {
 	private static final String JSON_ANNOTATION_CONTROLLER_BASE_URL = 
-		"http://localhost:8080/yuma-server/api/annotation";
+		"http://localhost:8080/yuma4j-server/api/annotation";
 
 	private static final String ACCEPT_HEADER = "Accept";
 	private static final String LOCATION_HEADER = "Location";
@@ -36,7 +30,7 @@ public class JSONControllerTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		EmbeddedJAXRSServer.startEmbeddedJaxrsServer(JSONController.class);
+		EmbeddedAnnotationServer.start();
 	}
 		
 	@Test

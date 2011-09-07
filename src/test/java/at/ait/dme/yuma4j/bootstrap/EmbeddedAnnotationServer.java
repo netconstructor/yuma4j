@@ -24,6 +24,10 @@ public class EmbeddedAnnotationServer {
 		stop();
 	}
 	
+	public static String getApplicationURL() {
+		return "http://localhost:" + SERVER_PORT + CONTEXT_PATH;
+	}
+	
 	public static void start() throws Exception {
 		if (server == null) {
 			server = new Server();
@@ -39,7 +43,7 @@ public class EmbeddedAnnotationServer {
 			context.setWar("src/main/webapp");
 			server.addHandler(context);
 			
-			log.info("Starting embedded Jetty server at http://localhost:" + SERVER_PORT + CONTEXT_PATH);
+			log.info("Starting embedded Jetty server at " + getApplicationURL());
 			server.start();
 		}
 	}

@@ -1,7 +1,6 @@
 package at.ait.dme.yuma4j.server.controller;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
+import junit.framework.Assert;
 
 import org.apache.http.Header;
 import org.apache.http.HttpResponse;
@@ -13,6 +12,7 @@ import org.apache.http.client.methods.HttpPost;
 import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.apache.log4j.Logger;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -20,34 +20,39 @@ import at.ait.dme.yuma4j.bootstrap.EmbeddedAnnotationServer;
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
 
 public class JSONControllerTest {
-	private static final String JSON_ANNOTATION_CONTROLLER_BASE_URL = 
-		"http://localhost:8080/yuma4j-server/api/annotation";
+	
+	private static final String JSON_CONTROLLER_BASE_URL = 
+		EmbeddedAnnotationServer.getApplicationURL() + "/api/annotation";
 
 	private static final String ACCEPT_HEADER = "Accept";
 	private static final String LOCATION_HEADER = "Location";
 	private static final String CONTENT_TYPE_JSON = "application/json";
 	private static final String ENCODING = "UTF-8";
 	
+	private Logger log = Logger.getLogger(getClass());
+	
 	@BeforeClass
 	public static void setUp() throws Exception {
+		// TODO make sure this gets executed against the in-memory test DB!
 		EmbeddedAnnotationServer.start();
 	}
 		
 	@Test
 	public void testCreateUpdateDeleteAnnotation() throws Exception {
 		HttpClient httpClient = new DefaultHttpClient();
-			
+		log.info("Testing JSON API at " + JSON_CONTROLLER_BASE_URL);
+					
 		// Create
 		StringEntity createEntity = new StringEntity(JsonTestData.ANNOTATION, ENCODING);
 		createEntity.setContentType(CONTENT_TYPE_JSON);
-		HttpPost createMethod = new HttpPost(JSON_ANNOTATION_CONTROLLER_BASE_URL);		
+		HttpPost createMethod = new HttpPost(JSON_CONTROLLER_BASE_URL);		
 		createMethod.setEntity(createEntity);
 		
 		HttpResponse response = httpClient.execute(createMethod);
-		assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
 		Header location = response.getHeaders(LOCATION_HEADER)[0];						
 		String createdAnnotationUrl = location.getValue();
-		assertNotNull(createdAnnotationUrl);
+		Assert.assertNotNull(createdAnnotationUrl);
 		response.getEntity().consumeContent();
 		
 		// Read
@@ -55,7 +60,7 @@ public class JSONControllerTest {
 		findByIdMethod.addHeader(ACCEPT_HEADER, CONTENT_TYPE_JSON);
 		
 		response = httpClient.execute(findByIdMethod);
-		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 		response.getEntity().consumeContent();
 		
 		// Update
@@ -65,10 +70,10 @@ public class JSONControllerTest {
 		updateMethod.setEntity(putEntity);
 		
 		response = httpClient.execute(updateMethod);
-		assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_OK, response.getStatusLine().getStatusCode());
 		location = response.getHeaders(LOCATION_HEADER)[0];						
 		String updatedAnnotationUrl = location.getValue();
-		assertNotNull(updatedAnnotationUrl);
+		Assert.assertNotNull(updatedAnnotationUrl);
 		response.getEntity().consumeContent();
 		
 		// Delete
@@ -76,7 +81,7 @@ public class JSONControllerTest {
 		deleteMethod.addHeader(ACCEPT_HEADER, CONTENT_TYPE_JSON);
 		
 		response = httpClient.execute(deleteMethod);
-		assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
 	}
 	
 	@Test
@@ -86,11 +91,11 @@ public class JSONControllerTest {
 		// root #1
 		StringEntity createEntity = new StringEntity(JsonTestData.ANNOTATION, ENCODING);
 		createEntity.setContentType(CONTENT_TYPE_JSON);
-		HttpPost createMethod = new HttpPost(JSON_ANNOTATION_CONTROLLER_BASE_URL);		
+		HttpPost createMethod = new HttpPost(JSON_CONTROLLER_BASE_URL);		
 		createMethod.setEntity(createEntity);		
 		
 		HttpResponse response = httpClient.execute(createMethod);
-		assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
 		Header location = response.getHeaders(LOCATION_HEADER)[0];						
 		String root1 = location.getValue();
 		root1 = root1.substring(root1.lastIndexOf("/") + 1);
@@ -100,7 +105,7 @@ public class JSONControllerTest {
 		response = httpClient.execute(createMethod);
 		response.getEntity().consumeContent();
 		
-		assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
 		location = response.getHeaders(LOCATION_HEADER)[0];						
 		String root2 = location.getValue();
 		root2 = root2.substring(root2.lastIndexOf("/") + 1);
@@ -108,31 +113,31 @@ public class JSONControllerTest {
 		// reply #1
 		StringEntity replyEntity = new  StringEntity(JsonTestData.reply(root1, root1), ENCODING);
 		replyEntity.setContentType(CONTENT_TYPE_JSON);
-		createMethod = new HttpPost(JSON_ANNOTATION_CONTROLLER_BASE_URL);		
+		createMethod = new HttpPost(JSON_CONTROLLER_BASE_URL);		
 		createMethod.setEntity(replyEntity);			
 		
 		response = httpClient.execute(createMethod);	
-		assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_CREATED, response.getStatusLine().getStatusCode());
 		location = response.getHeaders(LOCATION_HEADER)[0];						
 		String reply1 = location.getValue();
-		assertNotNull(reply1);
+		Assert.assertNotNull(reply1);
 		response.getEntity().consumeContent();	
 		
 		// Delete
 		HttpDelete deleteMethod = new HttpDelete(reply1);
 		deleteMethod.addHeader(ACCEPT_HEADER, CONTENT_TYPE_JSON);
 		response = httpClient.execute(deleteMethod);
-		assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
 		
-		deleteMethod = new HttpDelete(JSON_ANNOTATION_CONTROLLER_BASE_URL + "/" + root1);
+		deleteMethod = new HttpDelete(JSON_CONTROLLER_BASE_URL + "/" + root1);
 		deleteMethod.addHeader(ACCEPT_HEADER, CONTENT_TYPE_JSON);
 		response = httpClient.execute(deleteMethod);
-		assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
 		
-		deleteMethod = new HttpDelete(JSON_ANNOTATION_CONTROLLER_BASE_URL + "/" + root2);
+		deleteMethod = new HttpDelete(JSON_CONTROLLER_BASE_URL + "/" + root2);
 		deleteMethod.addHeader(ACCEPT_HEADER, CONTENT_TYPE_JSON);
 		response = httpClient.execute(deleteMethod);
-		assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
+		Assert.assertEquals(HttpStatus.SC_NO_CONTENT, response.getStatusLine().getStatusCode());
 	}
 	
 }

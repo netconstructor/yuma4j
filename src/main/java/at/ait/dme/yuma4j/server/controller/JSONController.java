@@ -33,7 +33,7 @@ public class JSONController {
 	@POST
 	@Consumes("application/json")
 	@Path("/annotation")
-	protected Response createAnnotation(String annotation) throws AnnotationStoreException, 
+	public Response createAnnotation(String annotation) throws AnnotationStoreException, 
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
 		AnnotationStore db = null;

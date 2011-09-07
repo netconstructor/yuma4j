@@ -1,6 +1,5 @@
 /yuma-server.war
 /report
-src/main/webapp/WEB-INF/web.xml
 src/main/webapp/WEB-INF/classes/
 /.gradle
 /.settings

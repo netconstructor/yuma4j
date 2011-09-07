@@ -34,7 +34,7 @@ public class JSONControllerTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		EmbeddedAnnotationServer.start();
+		EmbeddedAnnotationServer.start("test.properties");
 	}
 	
 	@AfterClass

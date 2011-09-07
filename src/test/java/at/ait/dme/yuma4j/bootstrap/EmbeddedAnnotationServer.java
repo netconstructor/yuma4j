@@ -35,7 +35,7 @@ public class EmbeddedAnnotationServer {
 		start(null);
 	}
 	
-	public static void start(String storageMode) throws Exception {
+	public static void start(String propertiesFile) throws Exception {
 		if (server == null) {
 			server = new Server();
 			SocketConnector connector = new SocketConnector();
@@ -49,9 +49,11 @@ public class EmbeddedAnnotationServer {
 			context.setContextPath(CONTEXT_PATH);
 			context.setWar("src/main/webapp");
 			
-			Map<String, String> initParams = new HashMap<String, String>();
-			initParams.put("server.properties.file", "test.properties");
-			context.setInitParams(initParams);
+			if (propertiesFile != null) {
+				Map<String, String> initParams = new HashMap<String, String>();
+				initParams.put("server.properties.file", propertiesFile);
+				context.setInitParams(initParams);
+			}
 			
 			server.addHandler(context);
 			

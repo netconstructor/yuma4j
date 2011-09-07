@@ -3,8 +3,6 @@ package at.ait.dme.yuma4j.server;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-import at.ait.dme.yuma4j.server.config.ServerConfig;
-
 /**
  * Utility class for building annotation URIs.
  * 
@@ -15,9 +13,9 @@ public class URIBuilder {
 	private static final String ERROR = "Could not build URI for ID ";
 	private static final String PATH_TO_ANNOTATION = "api/annotation/";
 	
-	public static URI toURI(String annotationID) {
+	public static URI toURI(String baseURL, String annotationID) {
 		try {
-			return new URI(ServerConfig.getInstance().getServerBaseURL() + PATH_TO_ANNOTATION + annotationID);
+			return new URI(baseURL + PATH_TO_ANNOTATION + annotationID);
 		} catch (URISyntaxException e) {
 			// Should never happen
 			throw new RuntimeException(ERROR + annotationID);

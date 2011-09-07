@@ -1,5 +1,8 @@
 package at.ait.dme.yuma4j.bootstrap;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.jboss.resteasy.logging.Logger;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -29,6 +32,10 @@ public class EmbeddedAnnotationServer {
 	}
 	
 	public static void start() throws Exception {
+		start(null);
+	}
+	
+	public static void start(String storageMode) throws Exception {
 		if (server == null) {
 			server = new Server();
 			SocketConnector connector = new SocketConnector();
@@ -41,6 +48,11 @@ public class EmbeddedAnnotationServer {
 			context.setServer(server);
 			context.setContextPath(CONTEXT_PATH);
 			context.setWar("src/main/webapp");
+			
+			Map<String, String> initParams = new HashMap<String, String>();
+			initParams.put("server.properties.file", "test.properties");
+			context.setInitParams(initParams);
+			
 			server.addHandler(context);
 			
 			log.info("Starting embedded Jetty server at " + getApplicationURL());

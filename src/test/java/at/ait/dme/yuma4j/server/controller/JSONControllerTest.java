@@ -13,6 +13,7 @@ import org.apache.http.client.methods.HttpPut;
 import org.apache.http.entity.StringEntity;
 import org.apache.http.impl.client.DefaultHttpClient;
 import org.apache.log4j.Logger;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
@@ -33,8 +34,12 @@ public class JSONControllerTest {
 	
 	@BeforeClass
 	public static void setUp() throws Exception {
-		// TODO make sure this gets executed against the in-memory test DB!
 		EmbeddedAnnotationServer.start();
+	}
+	
+	@AfterClass
+	public static void tearDown() throws Exception {
+		EmbeddedAnnotationServer.stop();
 	}
 		
 	@Test

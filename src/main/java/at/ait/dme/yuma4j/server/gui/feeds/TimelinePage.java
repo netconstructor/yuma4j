@@ -11,6 +11,7 @@ import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
+import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 /**
  * The public timeline.
@@ -25,11 +26,13 @@ public class TimelinePage extends BaseAnnotationListPage {
 	private static final String HEADLINE = "public timeline";
 	private static final String FEED_URL = "feeds/timeline";
 	
+	private ServerConfig config = ServerConfig.getInstance(WicketApplication.getConfig());
+	
 	public TimelinePage(final PageParameters parameters) {
 		setTitle(TITLE);
 		setHeadline(HEADLINE);
 		setAnnotations(getMostRecent(20));
-		setFeedURL(ServerConfig.getInstance().getServerBaseURL() + FEED_URL);
+		setFeedURL(config.getServerBaseURL() + FEED_URL);
 	}
     
 	private List<Annotation> getMostRecent(int n) {
@@ -37,7 +40,7 @@ public class TimelinePage extends BaseAnnotationListPage {
 		List<Annotation> mostRecent = new ArrayList<Annotation>();
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			mostRecent = db.getMostRecent(n, true);
 		} catch (AnnotationStoreException e) {

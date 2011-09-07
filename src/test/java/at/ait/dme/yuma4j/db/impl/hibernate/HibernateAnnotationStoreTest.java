@@ -1,6 +1,8 @@
 package at.ait.dme.yuma4j.db.impl.hibernate;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import junit.framework.Assert;
 
@@ -24,7 +26,9 @@ public class HibernateAnnotationStoreTest {
 	@Test
 	public void testHibernateCRUD() throws Exception {
 		HibernateAnnotationStore db = new HibernateAnnotationStore();
-		db.init("test");
+		Map<Object, Object> initParams = new HashMap<Object, Object>();
+		initParams.put("persistence.unit", "test");
+		db.init(initParams);
 		db.connect();
 		
 		// Create

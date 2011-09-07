@@ -5,6 +5,7 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -34,18 +35,21 @@ import at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity;
  */
 public class HibernateAnnotationStore extends AnnotationStore {
 	
+	public static final String PARAM_PERSISTENCE_UNIT = "persistence.unit";
+	
 	private static EntityManagerFactory emf;	
 	
 	private EntityManager em = null;
-
-	public synchronized void init(String persistenceUnit) {	
-		emf = Persistence.createEntityManagerFactory(persistenceUnit);
+	
+	@Override
+	public synchronized void init(Map<Object, Object> params) {	
+		emf = Persistence.createEntityManagerFactory((String) params.get(PARAM_PERSISTENCE_UNIT));
 	}
 	
 	@Override
-	public void connect() {
+	public void connect() throws AnnotationStoreException {
 		if (emf == null) 
-			init("production");
+			throw new AnnotationStoreException("Hibernate annotation store not initialized!");
 		
 		em = emf.createEntityManager();		
 	}

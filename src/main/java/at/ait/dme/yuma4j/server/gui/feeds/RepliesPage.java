@@ -13,6 +13,7 @@ import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
+import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 public class RepliesPage extends BaseAnnotationListPage {
 	
@@ -24,6 +25,8 @@ public class RepliesPage extends BaseAnnotationListPage {
 	private static final String HEADLINE = "Replies to ";
 	private static final String FEEDS = "feeds/replies/";
 	
+	private ServerConfig config = ServerConfig.getInstance(WicketApplication.getConfig());
+	
 	public RepliesPage(final PageParameters parameters) {
 		Annotation parent = 
 			getParentAnnotation(parameters.getString(PARAM_PARENT_ID));		
@@ -34,13 +37,13 @@ public class RepliesPage extends BaseAnnotationListPage {
 		setTitle(TITLE + "'" + parent.getAnnotationID() + "'");
 		setHeadline(HEADLINE + "'" + parent.getAnnotationID() + "'");		
 		setAnnotations(getReplies(parent.getAnnotationID()));
-		setFeedURL(ServerConfig.getInstance().getServerBaseURL() + FEEDS + parent.getAnnotationID());
+		setFeedURL(config.getServerBaseURL() + FEEDS + parent.getAnnotationID());
 	}
 	
 	private Annotation getParentAnnotation(String id) {
 		AnnotationStore db = null;
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			return db.getAnnotation(id);
 		} catch (AnnotationStoreException e) {
@@ -57,7 +60,7 @@ public class RepliesPage extends BaseAnnotationListPage {
 	private List<Annotation> getReplies(String id) {
 		AnnotationStore db = null;
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			return db.listRepliesToAnnotation(id).asFlatList();
 		} catch (AnnotationStoreException e) {

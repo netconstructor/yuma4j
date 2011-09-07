@@ -2,19 +2,26 @@ package at.ait.dme.yuma4j.server.config;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 
 /**
- * Configuration settings for the annotation server.
+ * Configuration settings for the annotation storeage server.
  * 
  * @author Christian Sadilek <christian.sadilek@gmail.com>
+ * @author Rainer Simon <rainer.simon@ait.ac.at> 
  */
 public class ServerConfig {
 
-	private static ServerConfig instance = null;
+	public static final String INIT_PARAM_PROPERTIES = "server.properties.file";
+	
+	private static final String DEFAULT_PROPERTIES_FILE = "server.properties";
+	
+	private static Map<String, ServerConfig> instances = new HashMap<String, ServerConfig>();
 	
 	private static final String SERVER_BASE_URL = "server.base.url";
 	private static final String ADMIN_USERNAME = "admin.username";
@@ -26,35 +33,36 @@ public class ServerConfig {
 	private String adminPassword;
 	private AnnotationStore annotationStore;
 
-	private ServerConfig() {
-		Properties props = new Properties();
-		InputStream is = getClass().getClassLoader().getResourceAsStream("server.properties");
+	private ServerConfig(String propertiesFilename) {
+		Properties properties = new Properties();
+		InputStream is = getClass().getClassLoader().getResourceAsStream(propertiesFilename);
 		if (is == null)
-			throw new RuntimeException("Fatal error: server.properties not found");
+			throw new RuntimeException("Fatal error: " + propertiesFilename + " not found");
 
 		try {
-			props.load(is);
+			properties.load(is);
 		} catch (IOException e) {
-			throw new RuntimeException("Fatal error: could not load server.properties: " + e.getMessage());
+			throw new RuntimeException("Fatal error: could not load " + propertiesFilename + ": " + e.getMessage());
 		}
-		
-		serverBaseURL = props.getProperty(SERVER_BASE_URL);
-		adminUsername = props.getProperty(ADMIN_USERNAME);
-		adminPassword = props.getProperty(ADMIN_PASSWORD);
+
+		serverBaseURL = properties.getProperty(SERVER_BASE_URL);
+		adminUsername = properties.getProperty(ADMIN_USERNAME);
+		adminPassword = properties.getProperty(ADMIN_PASSWORD);
 		
 		if (serverBaseURL == null ||
 			adminUsername == null ||
 			adminPassword == null)
 			
-			throw new RuntimeException("Fatal error: server.properties is missing parameter(s)");
+			throw new RuntimeException("Fatal error: " + propertiesFilename + " is missing parameter(s)");
 			
-		String storeImpl = props.getProperty(ANNOTATION_STORE_CLASS);
+		String storeImpl = properties.getProperty(ANNOTATION_STORE_CLASS);
 		try {
 			Class<?> annotationStoreImplClass = Class.forName(storeImpl);
 			Object obj = annotationStoreImplClass.newInstance();
 			
 			if (obj instanceof AnnotationStore) {
 				annotationStore = (AnnotationStore) obj;
+				annotationStore.init(properties);
 			} else {
 				throw new InstantiationException();
 			}
@@ -63,11 +71,14 @@ public class ServerConfig {
 		}
 	}
 	
-	public static ServerConfig getInstance() {
-		if (instance == null)
-			instance = new ServerConfig();
+	public static ServerConfig getInstance(String propertiesFilename) {
+		if (propertiesFilename == null)
+			propertiesFilename = DEFAULT_PROPERTIES_FILE; 
+				
+		if (instances.get(propertiesFilename) == null)
+			instances.put(propertiesFilename, new ServerConfig(propertiesFilename));
 
-		return instance;
+		return instances.get(propertiesFilename);
 	}
 	
 	public String getServerBaseURL() {

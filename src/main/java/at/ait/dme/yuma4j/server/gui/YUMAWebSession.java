@@ -16,7 +16,7 @@ public class YUMAWebSession extends AuthenticatedWebSession {
 
     @Override
     public boolean authenticate(final String username, final String password) {
-    	ServerConfig config = ServerConfig.getInstance();
+    	ServerConfig config = ServerConfig.getInstance(WicketApplication.getConfig());
         return username.equals(config.getAdminUsername()) && password.equals(config.getAdminPassword());
     }
 

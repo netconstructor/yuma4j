@@ -5,6 +5,7 @@ import org.apache.wicket.authentication.AuthenticatedWebSession;
 import org.apache.wicket.markup.html.WebPage;
 import org.apache.wicket.request.target.coding.MixedParamUrlCodingStrategy;
 
+import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.admin.Dashboard;
 import at.ait.dme.yuma4j.server.gui.admin.LoginPage;
 import at.ait.dme.yuma4j.server.gui.admin.LogoutPage;
@@ -62,8 +63,13 @@ public class WicketApplication extends AuthenticatedWebApplication {
         return LoginPage.class;
     }
 	
+    @Override
 	public Class<Search> getHomePage() {
 		return Search.class;
 	}
+    
+    public static String getConfig() {
+    	return ((WicketApplication) WicketApplication.get()).getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES);
+    }
 
 }

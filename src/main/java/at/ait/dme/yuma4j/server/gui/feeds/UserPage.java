@@ -11,6 +11,7 @@ import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
+import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 /**
  * A user's public feed page.
@@ -30,13 +31,15 @@ public class UserPage extends BaseAnnotationListPage {
 	private static final String HEADLINE = "'s public feed";
 	private static final String FEEDS = "feeds/user/";
 	
+	private ServerConfig config = ServerConfig.getInstance(WicketApplication.getConfig());
+	
 	public UserPage(final PageParameters parameters) {
 		String username = parameters.getString(PARAM_USERNAME);		
 		
 		setTitle(TITLE + username);
 		setHeadline(username + HEADLINE);		
 		setAnnotations(getAnnotationsByUser(username));
-		setFeedURL(ServerConfig.getInstance().getServerBaseURL() + FEEDS + username);
+		setFeedURL(config.getServerBaseURL() + FEEDS + username);
 	}
 	
 	private List<Annotation> getAnnotationsByUser(String username) {
@@ -44,7 +47,7 @@ public class UserPage extends BaseAnnotationListPage {
 		List<Annotation> annotations = new ArrayList<Annotation>();
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			annotations = db.listAnnotationsForUser(username);
 		} catch (AnnotationStoreException e) {

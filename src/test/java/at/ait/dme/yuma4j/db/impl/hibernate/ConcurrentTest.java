@@ -3,6 +3,8 @@ package at.ait.dme.yuma4j.db.impl.hibernate;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 
 import org.codehaus.jackson.map.ObjectMapper;
@@ -36,7 +38,9 @@ public class ConcurrentTest {
 					try {
 						startGate.await();						
 						HibernateAnnotationStore db = new HibernateAnnotationStore();
-						db.init("test");			
+						Map<Object, Object> initParams = new HashMap<Object, Object>();
+						initParams.put("persistence.unit", "test");
+						db.init(initParams);		
 						try {
 							long start = System.currentTimeMillis();
 							db.connect();						
@@ -74,10 +78,13 @@ public class ConcurrentTest {
 	
 	@Test
 	public void testReadCommited() throws Exception {		
+		Map<Object, Object> initParams = new HashMap<Object, Object>();
+		initParams.put("persistence.unit", "test");
+		
 		HibernateAnnotationStore db1 = new HibernateAnnotationStore();
-		db1.init("test");
+		db1.init(initParams);
 		HibernateAnnotationStore db2 = new HibernateAnnotationStore();
-		db2.init("test");
+		db2.init(initParams);
 		
 		String id = null;
 		try {

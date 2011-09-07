@@ -1,6 +1,7 @@
 package at.ait.dme.yuma4j.db;
 
 import java.util.List;
+import java.util.Map;
 
 import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.AnnotationTree;
@@ -33,10 +34,16 @@ import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 public abstract class AnnotationStore {	
 	
 	/**
+	 * Initializes the store
+	 * @param initparams an optional map of (implementation-specific) init parameters
+	 */
+	public abstract void init(Map<Object, Object> initparams);
+	
+	/**
 	 * Connect to the store
 	 * @throws AnnotationStoreException if anything goes wrong
 	 */
-	public abstract void connect();
+	public abstract void connect() throws AnnotationStoreException;
 	
 	/**
 	 * Disconnect from the store

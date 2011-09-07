@@ -10,6 +10,7 @@ import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
+import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 /**
  * The search result page.
@@ -49,7 +50,7 @@ public class Results extends BaseAnnotationListPage {
 		List<Annotation> searchResults = new ArrayList<Annotation>();
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(WicketApplication.getConfig()).getAnnotationStore();
 			db.connect();
 			searchResults = db.findAnnotations(query);
 		} finally {

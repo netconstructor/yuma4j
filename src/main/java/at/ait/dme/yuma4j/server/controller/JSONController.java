@@ -5,9 +5,11 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.URLDecoder;
 
+import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
 import javax.ws.rs.POST;
 import javax.ws.rs.Path;
+import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
 import org.codehaus.jackson.JsonParseException;
@@ -29,24 +31,30 @@ public class JSONController {
 	private static final String URL_ENCODING = "UTF-8";
 	
 	private ObjectMapper jsonMapper = new ObjectMapper();
+	
+	@Context
+	private ServletContext servletContext;
 
 	@POST
 	@Consumes("application/json")
 	@Path("/annotation")
 	public Response createAnnotation(String annotation) throws AnnotationStoreException, 
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
-		
+				
 		AnnotationStore db = null;
 		String annotationId = null;
 		
+		ServerConfig config = 
+			ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
+		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			annotationId = db.createAnnotation(jsonMapper.readValue(annotation, Annotation.class));
 		} finally {
 			if (db != null) db.disconnect();
 		}
-		return Response.created(URIBuilder.toURI(annotationId)).entity(annotationId).build();
+		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), annotationId)).entity(annotationId).build();
 	}
 	
 	/**
@@ -61,9 +69,9 @@ public class JSONController {
 		
 		AnnotationStore db = null;
 		String annotation = null;
-		
+				
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 				annotation = jsonMapper
 					.writeValueAsString(db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING)));
@@ -90,8 +98,12 @@ public class JSONController {
 			throws AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;
+		
+		ServerConfig config = 
+			ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
+		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			annotationId = db.updateAnnotation(
 					URLDecoder.decode(annotationId, URL_ENCODING),
@@ -104,7 +116,7 @@ public class JSONController {
 		} finally {
 			if(db != null) db.disconnect();
 		}	
-		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(annotationId)).build(); 
+		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(config.getServerBaseURL(), annotationId)).build(); 
 	}
 	
 	/**
@@ -121,7 +133,7 @@ public class JSONController {
 		
 		AnnotationStore db = null;
 		try {			
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			db.deleteAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
 		} finally {
@@ -146,7 +158,7 @@ public class JSONController {
 		AnnotationStore db = null;
 		String thread = null;
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			thread = jsonMapper.writeValueAsString(db.listRepliesToAnnotation(URLDecoder.decode(annotationId, URL_ENCODING)));
 		} catch (IOException e) {
@@ -171,7 +183,7 @@ public class JSONController {
 		String tree = null;
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectId, URL_ENCODING)));
 		} catch (IOException e) {
@@ -196,7 +208,7 @@ public class JSONController {
 		long count = 0;
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			count = db.countAnnotationsForObject(URLDecoder.decode(objectID, URL_ENCODING));
 		} catch (UnsupportedEncodingException e) {
@@ -213,7 +225,7 @@ public class JSONController {
 		String annotations = null;
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			annotations = jsonMapper.writeValueAsString(db.listAnnotationsForUser(URLDecoder.decode(username, URL_ENCODING)));
 		} catch (IOException e) {
@@ -230,7 +242,7 @@ public class JSONController {
 		String mostRecent = null;
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			mostRecent = jsonMapper.writeValueAsString(db.getMostRecent(n, true));
 		} catch (IOException e) {
@@ -255,7 +267,7 @@ public class JSONController {
 		String annotations = null;		
 		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
 			annotations = jsonMapper.writeValueAsString(db.findAnnotations(URLDecoder.decode(query, URL_ENCODING)));
 		} catch (IOException e) {

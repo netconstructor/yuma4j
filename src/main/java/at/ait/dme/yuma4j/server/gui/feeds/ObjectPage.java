@@ -14,6 +14,7 @@ import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
+import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 public class ObjectPage extends BaseAnnotationListPage {
 	
@@ -27,6 +28,8 @@ public class ObjectPage extends BaseAnnotationListPage {
 	private static final String HEADLINE = "Annotations for ";
 	private static final String FEEDS = "feeds/object/";
 	
+	private ServerConfig config = ServerConfig.getInstance(WicketApplication.getConfig());
+	
 	public ObjectPage(final PageParameters parameters) {
 		try {
 			String objectId = URLDecoder.decode(parameters.getString(PARAM_OBJECT), UTF8);		
@@ -36,7 +39,7 @@ public class ObjectPage extends BaseAnnotationListPage {
 			setHeadline(HEADLINE + "'" + screenName + "'" );		
 			setAnnotations(getAnnotationsForObject(objectId));
 
-			setFeedURL(ServerConfig.getInstance().getServerBaseURL() + FEEDS 
+			setFeedURL(config.getServerBaseURL() + FEEDS 
 					+ URLEncoder.encode(objectId, UTF8).replace("%", "%25"));
 		} catch (UnsupportedEncodingException e) {
 			// Should never ever happen
@@ -47,7 +50,7 @@ public class ObjectPage extends BaseAnnotationListPage {
 	private List<Annotation> getAnnotationsForObject(String objectId) {
 		AnnotationStore db = null;		
 		try {
-			db = ServerConfig.getInstance().getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			return db.listAnnotationsForObject(objectId).asFlatList();
 		} catch (AnnotationStoreException e) {

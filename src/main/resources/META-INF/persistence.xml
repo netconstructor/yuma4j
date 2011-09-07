@@ -10,7 +10,7 @@
 		<properties>
 	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
 	        <property name="hibernate.connection.driver_class" value="org.postgresql.Driver"/>
-	        <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/ait"/>
+	        <property name="hibernate.connection.url" value="jdbc:postgresql://localhost:5432/yuma4j"/>
 	        <property name="hibernate.hbm2ddl.auto" value="update"/>
 	        <property name="hibernate.show_sql" value="false"/>
 	        <property name="hibernate.connection.username" value="postgres"/>

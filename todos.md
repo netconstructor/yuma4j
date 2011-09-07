@@ -6,7 +6,6 @@
 * Revise feed API
 * 'Dump database' and 'Dump to RDF' feature (in the admin section)
 * Implement index-based operations in HibernateAnnotationStore using Hibernate Search
-* Some CSS tweaks are still needed in the existing server GUI
 * The 'created' and 'modified' properties should be set by the system, not via JSON! 
 * Unit testing: test annotation tree setup
 * Unit testing: test annotation tree DB retrieval

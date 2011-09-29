@@ -7,8 +7,13 @@ import java.net.URLDecoder;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.Consumes;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
 import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
+import javax.ws.rs.PathParam;
+import javax.ws.rs.Produces;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
@@ -57,14 +62,10 @@ public class JSONController {
 		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), annotationId)).entity(annotationId).build();
 	}
 	
-	/**
-	 * Find an annotation by its ID
-	 * @param annotationId the annotation ID
-	 * @return status code 200 and found annotation
-	 * @throws AnnotationStoreException (500)
-	 * @throws UnsupportedEncodingException (500
-	 */
-	protected Response getAnnotation(String annotationId)
+	@GET
+	@Produces("application/json")
+	@Path("/annotation/{id}")
+	public Response getAnnotation(@PathParam("id") String annotationId)
 		throws AnnotationStoreException, AnnotationNotFoundException, UnsupportedEncodingException {
 		
 		AnnotationStore db = null;
@@ -84,17 +85,10 @@ public class JSONController {
 		return Response.ok(annotation).build();
 	}
 	
-	/**
-	 * Update an existing annotation
-	 * @param annotationId the annotation ID 
-	 * @param annotation the JSON representation of the annotation
-	 * @return status code 200 and updated annotation representation
-	 * @throws AnnotationStoreException (500)
-	 * @throws InvalidAnnotationException (415)
-	 * @throws AnnotationHasReplyException (409)
-	 * @throws AnnotationNotFoundException
-	 */
-	protected Response updateAnnotation(String annotationId, String annotation)
+	@PUT
+	@Consumes("application/json")
+	@Path("/annotation/{id}")
+	public Response updateAnnotation(@PathParam("id") String annotationId, String annotation)
 			throws AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;
@@ -119,16 +113,9 @@ public class JSONController {
 		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(config.getServerBaseURL(), annotationId)).build(); 
 	}
 	
-	/**
-	 * Delete an annotation
-	 * @param annotationId the annotation ID
-	 * @return status code 204
-	 * @throws AnnotationStoreException (500)
-	 * @throws UnsupportedEncodingException (500)
-	 * @throws AnnotationHasReplyException (409)
-	 * @throws AnnotationNotFoundException (404)
-	 */
-	protected Response deleteAnnotation(String annotationId)
+	@DELETE
+	@Path("/annotation/{id}")
+	public Response deleteAnnotation(@PathParam("id") String annotationId)
 		throws AnnotationStoreException, AnnotationHasReplyException, UnsupportedEncodingException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;

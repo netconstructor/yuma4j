@@ -91,6 +91,7 @@ public class JSONControllerTest {
 	
 	@Test
 	public void testReplyFunctionality() throws Exception {
+		// TODO this unit test needs MUCH more work
 		HttpClient httpClient = new DefaultHttpClient();
 		
 		// root #1

@@ -126,8 +126,7 @@ public class Annotation extends AbstractModelPOJO {
 		return created;
 	}
 	
-	// Required for JSON mapping
-	void setCreated(Date created) {
+	public void setCreated(Date created) {
 		this.created = created;
 	}
 
@@ -135,8 +134,7 @@ public class Annotation extends AbstractModelPOJO {
 		return modified;
 	}
 	
-	// Required for JSON mapping
-	void setModified(Date modified) {
+	public void setModified(Date modified) {
 		this.modified = modified;
 	}
 	

@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 
 import java.net.URLDecoder;
+import java.util.Date;
 
 import javax.servlet.ServletContext;
 import javax.ws.rs.PathParam;
@@ -44,7 +45,15 @@ public class AbstractJsonController {
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
-			annotationId = db.createAnnotation(jsonMapper.readValue(annotation, Annotation.class));
+			
+			// Parse annotation
+			Annotation a = jsonMapper.readValue(annotation, Annotation.class);
+			
+			// It's a new annotation, created now - set timestamps to current time
+			a.setCreated(new Date());
+			a.setModified(new Date());
+			
+			annotationId = db.createAnnotation(a);
 		} finally {
 			if (db != null) db.disconnect();
 		}

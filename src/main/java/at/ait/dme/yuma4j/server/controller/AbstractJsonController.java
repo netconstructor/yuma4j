@@ -91,11 +91,13 @@ public class AbstractJsonController {
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
-			annotationId = db.updateAnnotation(
-					URLDecoder.decode(annotationId, URL_ENCODING),
-					jsonMapper.readValue(annotation, Annotation.class));
 			
-			annotation = jsonMapper.writeValueAsString(db.getAnnotation(annotationId));
+			Annotation a = jsonMapper.readValue(annotation, Annotation.class);
+			
+			// Set modfied timestamp to now
+			a.setModified(new Date());
+			
+			annotationId = db.updateAnnotation(URLDecoder.decode(annotationId, URL_ENCODING), a);
 		} catch (IOException e) {
 			// Should never happen (except in case of DB inconsistency)
 			throw new RuntimeException(e);

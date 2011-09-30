@@ -16,12 +16,18 @@ import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 @Path("/api")
 public class JsonPController extends AbstractJsonController {
 	
+    /**
+     * Log message String constants
+     */
+    private static final String LOG_CREATE = " Creating new annotation: ";
+	
 	@GET
 	@Path("/annotation/jsonp/create")
 	@Override
 	public Response createAnnotation(@QueryParam("json") String json) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
-		
+
+		log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
 		return super.createAnnotation(json);
 	}
 	

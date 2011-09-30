@@ -7,10 +7,12 @@ import java.net.URLDecoder;
 import java.util.Date;
 
 import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
 import javax.ws.rs.core.Response;
 
+import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
@@ -32,6 +34,11 @@ public class AbstractJsonController {
 	
 	@Context
 	private ServletContext servletContext;
+	
+    @Context
+    protected HttpServletRequest servletRequest;
+    
+    protected Logger log = Logger.getLogger(getClass());
 
 	protected Response createAnnotation(String annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {

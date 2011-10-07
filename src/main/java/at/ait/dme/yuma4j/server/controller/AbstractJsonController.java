@@ -41,14 +41,14 @@ public class AbstractJsonController {
     
     protected Logger log = Logger.getLogger(getClass());
     
-	protected Response listAnnotations(String objectURI) throws AnnotationStoreException {
+	protected String listAnnotations(String objectURI) throws AnnotationStoreException {
 		AnnotationStore db = null;
 		String tree = null;
 		
 		try {
 			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
 			db.connect();
-			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)));
+			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
 		} catch (IOException e) {
 			// Should never happen
 			throw new RuntimeException(e);		
@@ -56,7 +56,7 @@ public class AbstractJsonController {
 			if(db != null) db.disconnect();
 		}
 
-		return Response.ok().entity(tree).build();
+		return tree;
 	}
 
 	protected Response createAnnotation(String annotation) throws AnnotationStoreException,

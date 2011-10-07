@@ -24,18 +24,20 @@ public class JsonPController extends AbstractJsonController {
 	
     @GET
     @Path("/list")
-	public Response listAnnotations(@QueryParam("objectURI") String objectURI) 
-		throws AnnotationStoreException {
+	public Response listAnnotations(@QueryParam("objectURI") String objectURI, 
+			@QueryParam("callback") String callback) throws AnnotationStoreException {
 
 		log.info(servletRequest.getRemoteAddr() + LOG_LIST + objectURI);
-		return super.listAnnotations(objectURI);
+		
+		String jsonp = callback + "(" + super.listAnnotations(objectURI) + ");";
+		return Response.ok().entity(jsonp).build();
 	}
     
 	@GET
 	@Path("/create")
-	@Override
-	public Response createAnnotation(@QueryParam("json") String json) throws AnnotationStoreException,
-		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
+	public Response createAnnotation(@QueryParam("json") String json, @QueryParam("callback") String callback)
+			throws AnnotationStoreException, JsonParseException, JsonMappingException, AnnotationModifiedException,
+			IOException {
 
 		log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
 		return super.createAnnotation(json);

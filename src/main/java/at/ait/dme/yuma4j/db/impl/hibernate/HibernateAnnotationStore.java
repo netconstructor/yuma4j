@@ -177,8 +177,6 @@ public class HibernateAnnotationStore extends AnnotationStore {
 
 	@Override
 	public AnnotationTree listAnnotationsForObject(String objectURI) throws AnnotationStoreException {
-		Configuration c = new Configuration();
-		c.buildSessionFactory().openSession();
 		try {
 			Query query = em.createNamedQuery("annotationentity.find.for.object");
 			query.setParameter("objectURI", objectURI);

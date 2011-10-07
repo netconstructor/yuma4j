@@ -13,16 +13,26 @@ import org.codehaus.jackson.map.JsonMappingException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 
-@Path("/api")
+@Path("/api/annotation/jsonp")
 public class JsonPController extends AbstractJsonController {
 	
     /**
      * Log message String constants
      */
+    private static final String LOG_LIST = " Listing annotations for object ";
     private static final String LOG_CREATE = " Creating new annotation: ";
 	
+    @GET
+    @Path("/list")
+	public Response listAnnotations(@QueryParam("objectURI") String objectURI) 
+		throws AnnotationStoreException {
+
+		log.info(servletRequest.getRemoteAddr() + LOG_LIST + objectURI);
+		return super.listAnnotations(objectURI);
+	}
+    
 	@GET
-	@Path("/annotation/jsonp/create")
+	@Path("/create")
 	@Override
 	public Response createAnnotation(@QueryParam("json") String json) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {

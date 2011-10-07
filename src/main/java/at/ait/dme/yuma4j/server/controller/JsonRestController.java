@@ -13,12 +13,12 @@ import org.codehaus.jackson.map.JsonMappingException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 
-@Path("/api")
+@Path("/api/annotation")
 public class JsonRestController extends AbstractJsonController {
 
 	@POST
 	@Consumes("application/json")
-	@Path("/annotation")
+	@Path("/")
 	public Response createAnnotationREST(String annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		

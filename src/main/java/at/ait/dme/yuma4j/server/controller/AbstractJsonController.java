@@ -40,6 +40,24 @@ public class AbstractJsonController {
     protected HttpServletRequest servletRequest;
     
     protected Logger log = Logger.getLogger(getClass());
+    
+	protected Response listAnnotations(String objectURI) throws AnnotationStoreException {
+		AnnotationStore db = null;
+		String tree = null;
+		
+		try {
+			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
+			db.connect();
+			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)));
+		} catch (IOException e) {
+			// Should never happen
+			throw new RuntimeException(e);		
+		} finally { 
+			if(db != null) db.disconnect();
+		}
+
+		return Response.ok().entity(tree).build();
+	}
 
 	protected Response createAnnotation(String annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
@@ -133,24 +151,6 @@ public class AbstractJsonController {
 		// response to DELETE without a body should return 204 NO CONTENT see 
 		// http://www.w3.org/Protocols/rfc2616/rfc2616.html
 		return Response.noContent().build(); 
-	}
-	
-	protected Response getAnnotationTree(String objectId) throws AnnotationStoreException {
-		AnnotationStore db = null;
-		String tree = null;
-		
-		try {
-			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
-			db.connect();
-			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectId, URL_ENCODING)));
-		} catch (IOException e) {
-			// Should never happen
-			throw new RuntimeException(e);		
-		} finally { 
-			if(db != null) db.disconnect();
-		}
-
-		return Response.ok().entity(tree).build();
 	}
 
 }

@@ -18,6 +18,7 @@ import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
 import at.ait.dme.yuma4j.Annotation;
+import at.ait.dme.yuma4j.User;
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
@@ -59,6 +60,9 @@ public class AbstractJsonController {
 			// It's a new annotation, created now - set timestamps to current time
 			a.setCreated(new Date());
 			a.setModified(new Date());
+			
+			// TODO get user from session! This is just a dummy for now
+			a.setCreator(new User("guest"));
 			
 			annotationId = db.createAnnotation(a);
 		} finally {

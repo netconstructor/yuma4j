@@ -117,8 +117,7 @@ public class Annotation extends AbstractModelPOJO {
 		return creator;
 	}
 	
-	// Required for JSON mapping
-	void setCreator(User creator) {
+	public void setCreator(User creator) {
 		this.creator = creator;
 	}
 	

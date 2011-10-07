@@ -49,7 +49,7 @@ public class JsonPController extends AbstractJsonController {
 		
 		Annotation a = super.createAnnotation(json);
 		String response = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
-		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), a.getAnnotationID()))
+		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getAnnotationID()))
 			.entity(response).build();
 	}
 	

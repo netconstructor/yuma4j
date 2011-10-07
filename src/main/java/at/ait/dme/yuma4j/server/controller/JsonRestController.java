@@ -25,7 +25,7 @@ public class JsonRestController extends AbstractJsonController {
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
 		Annotation a = super.createAnnotation(json);
-		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), a.getAnnotationID()))
+		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getAnnotationID()))
 				.entity(a).build();
 	}
 

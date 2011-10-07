@@ -38,13 +38,11 @@ public class AbstractJsonController {
 	
     @Context
     protected HttpServletRequest servletRequest;
-    
-    protected ServerConfig config;
-    
+       
     protected Logger log = Logger.getLogger(getClass());
     
-    AbstractJsonController() {
-    	config = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
+    protected ServerConfig getConfig() {
+    	return ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
     }
     
 	protected String listAnnotations(String objectURI) throws AnnotationStoreException {
@@ -52,7 +50,7 @@ public class AbstractJsonController {
 		String tree = null;
 		
 		try {
-			db = config.getAnnotationStore();
+			db = getConfig().getAnnotationStore();
 			db.connect();
 			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
 		} catch (IOException e) {
@@ -72,7 +70,7 @@ public class AbstractJsonController {
 		Annotation a = null;
 				
 		try {
-			db = config.getAnnotationStore();
+			db = getConfig().getAnnotationStore();
 			db.connect();
 			
 			// Parse annotation
@@ -98,7 +96,7 @@ public class AbstractJsonController {
 		String annotation = null;
 				
 		try {
-			db = config.getAnnotationStore();
+			db = getConfig().getAnnotationStore();
 			db.connect();
 				annotation = jsonMapper
 					.writeValueAsString(db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING)));
@@ -117,7 +115,7 @@ public class AbstractJsonController {
 		AnnotationStore db = null;
 				
 		try {
-			db = config.getAnnotationStore();
+			db = getConfig().getAnnotationStore();
 			db.connect();
 			
 			Annotation a = jsonMapper.readValue(annotation, Annotation.class);
@@ -132,7 +130,7 @@ public class AbstractJsonController {
 		} finally {
 			if(db != null) db.disconnect();
 		}	
-		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(config.getServerBaseURL(), annotationId)).build(); 
+		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(getConfig().getServerBaseURL(), annotationId)).build(); 
 	}
 	
 	protected void deleteAnnotation(@PathParam("id") String annotationId)
@@ -140,7 +138,7 @@ public class AbstractJsonController {
 		
 		AnnotationStore db = null;
 		try {			
-			db = config.getAnnotationStore();
+			db = getConfig().getAnnotationStore();
 			db.connect();
 			db.deleteAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
 		} finally {

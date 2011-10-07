@@ -31,7 +31,7 @@ public class AbstractJsonController {
 	
 	private static final String URL_ENCODING = "UTF-8";
 	
-	private ObjectMapper jsonMapper = new ObjectMapper();
+	protected ObjectMapper jsonMapper = new ObjectMapper();
 	
 	@Context
 	private ServletContext servletContext;
@@ -39,14 +39,20 @@ public class AbstractJsonController {
     @Context
     protected HttpServletRequest servletRequest;
     
+    protected ServerConfig config;
+    
     protected Logger log = Logger.getLogger(getClass());
+    
+    AbstractJsonController() {
+    	config = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
+    }
     
 	protected String listAnnotations(String objectURI) throws AnnotationStoreException {
 		AnnotationStore db = null;
 		String tree = null;
 		
 		try {
-			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
 		} catch (IOException e) {
@@ -59,34 +65,30 @@ public class AbstractJsonController {
 		return tree;
 	}
 
-	protected Response createAnnotation(String annotation) throws AnnotationStoreException,
+	protected Annotation createAnnotation(String annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
 		AnnotationStore db = null;
-		String annotationId = null;
-		
-		ServerConfig config = 
-			ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
-		
+		Annotation a = null;
+				
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
 			
 			// Parse annotation
-			Annotation a = jsonMapper.readValue(annotation, Annotation.class);
+			a = jsonMapper.readValue(annotation, Annotation.class);
 			
 			// It's a new annotation, created now - set timestamps to current time
 			a.setCreated(new Date());
 			a.setModified(new Date());
 			
 			// TODO get user from session! This is just a dummy for now
-			a.setCreator(new User("guest"));
-			
-			annotationId = db.createAnnotation(a);
+			a.setCreator(new User("guest"));			
 		} finally {
 			if (db != null) db.disconnect();
 		}
-		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), annotationId)).entity(annotationId).build();
+		
+		return a;
 	}
 	
 	protected Response getAnnotation(@PathParam("id") String annotationId)
@@ -96,7 +98,7 @@ public class AbstractJsonController {
 		String annotation = null;
 				
 		try {
-			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 				annotation = jsonMapper
 					.writeValueAsString(db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING)));
@@ -113,10 +115,7 @@ public class AbstractJsonController {
 			throws AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;
-		
-		ServerConfig config = 
-			ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
-		
+				
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
@@ -136,21 +135,17 @@ public class AbstractJsonController {
 		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(config.getServerBaseURL(), annotationId)).build(); 
 	}
 	
-	protected Response deleteAnnotation(@PathParam("id") String annotationId)
+	protected void deleteAnnotation(@PathParam("id") String annotationId)
 		throws AnnotationStoreException, AnnotationHasReplyException, UnsupportedEncodingException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;
 		try {			
-			db = ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES)).getAnnotationStore();
+			db = config.getAnnotationStore();
 			db.connect();
 			db.deleteAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
 		} finally {
 			if(db != null) db.disconnect();
-		}	
-		
-		// response to DELETE without a body should return 204 NO CONTENT see 
-		// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-		return Response.noContent().build(); 
+		}			
 	}
 
 }

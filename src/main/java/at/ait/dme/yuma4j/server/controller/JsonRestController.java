@@ -10,8 +10,10 @@ import javax.ws.rs.core.Response;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
+import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
+import at.ait.dme.yuma4j.server.URIBuilder;
 
 @Path("/api/annotation")
 public class JsonRestController extends AbstractJsonController {
@@ -19,10 +21,12 @@ public class JsonRestController extends AbstractJsonController {
 	@POST
 	@Consumes("application/json")
 	@Path("/")
-	public Response createAnnotationREST(String annotation) throws AnnotationStoreException,
+	public Response createAnnotationREST(String json) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
-		return super.createAnnotation(annotation);
+		Annotation a = super.createAnnotation(json);
+		return Response.created(URIBuilder.toURI(config.getServerBaseURL(), a.getAnnotationID()))
+				.entity(a).build();
 	}
 
 }

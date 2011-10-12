@@ -62,9 +62,7 @@ public class JsonPController extends AbstractJsonController {
 		
 		super.deleteAnnotation(id);
 		
-		// response to DELETE without a body should return 204 NO CONTENT see 
-		// http://www.w3.org/Protocols/rfc2616/rfc2616.html
-		return Response.noContent().build(); 
+		return Response.ok().entity(callback + "();").build(); 
 	}
 
 }

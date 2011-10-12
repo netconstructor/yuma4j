@@ -4,6 +4,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import org.codehaus.jackson.annotate.JsonIgnore;
+
 /**
  * The annotation.
  * 
@@ -90,6 +92,7 @@ public class Annotation extends AbstractModelPOJO {
 		this.mediatype = mediatype;
 	}
 	
+	@JsonIgnore
 	public boolean isValid() {
 		return this.objectURI != null &&
 			   this.creator != null &&

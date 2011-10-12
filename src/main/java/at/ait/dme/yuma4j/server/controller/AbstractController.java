@@ -5,12 +5,12 @@ import java.io.UnsupportedEncodingException;
 
 import java.net.URLDecoder;
 import java.util.Date;
+import java.util.List;
 
 import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.core.Context;
-import javax.ws.rs.core.Response;
 
 import org.apache.log4j.Logger;
 import org.codehaus.jackson.JsonParseException;
@@ -24,10 +24,9 @@ import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
-import at.ait.dme.yuma4j.server.URIBuilder;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 
-public class AbstractJsonController {
+public class AbstractController {
 	
 	private static final String URL_ENCODING = "UTF-8";
 	
@@ -45,14 +44,14 @@ public class AbstractJsonController {
     	return ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
     }
     
-	protected String listAnnotations(String objectURI) throws AnnotationStoreException {
+	protected List<Annotation> listAnnotations(String objectURI) throws AnnotationStoreException {
 		AnnotationStore db = null;
-		String tree = null;
+		List<Annotation> tree = null;
 		
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
-			tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
+			tree = db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList();
 		} catch (IOException e) {
 			// Should never happen
 			throw new RuntimeException(e);		
@@ -63,76 +62,77 @@ public class AbstractJsonController {
 		return tree;
 	}
 
-	protected Annotation createAnnotation(String annotation) throws AnnotationStoreException,
+	protected Annotation createAnnotation(Annotation annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
 		AnnotationStore db = null;
-		Annotation a = null;
 				
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
 			
-			// Parse annotation
-			a = jsonMapper.readValue(annotation, Annotation.class);
-			
 			// It's a new annotation, created now - set timestamps to current time
-			a.setCreated(new Date());
-			a.setModified(new Date());
+			annotation.setCreated(new Date());
+			annotation.setModified(new Date());
 			
 			// TODO get user from session! This is just a dummy for now
-			a.setCreator(new User("guest"));
+			annotation.setCreator(new User("guest"));
 			
-			db.createAnnotation(a);
+			db.createAnnotation(annotation);
 		} finally {
 			if (db != null) db.disconnect();
 		}
 		
-		return a;
+		return annotation;
 	}
 	
-	protected Response getAnnotation(@PathParam("id") String annotationId)
+	protected Annotation getAnnotation(@PathParam("id") String annotationId)
 		throws AnnotationStoreException, AnnotationNotFoundException, UnsupportedEncodingException {
 		
 		AnnotationStore db = null;
-		String annotation = null;
+		Annotation annotation = null;
 				
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
-				annotation = jsonMapper
-					.writeValueAsString(db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING)));
+			annotation = db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
 		} catch (IOException e) {
 			// Should never happen (except in case of DB inconsistency)
 			throw new RuntimeException(e);
 		} finally {
 			if(db != null) db.disconnect();
 		}
-		return Response.ok(annotation).build();
+		
+		return annotation;
 	}
 	
-	protected Response updateAnnotation(@PathParam("id") String annotationId, String annotation)
-			throws AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
+	protected Annotation updateAnnotation(Annotation annotation) throws AnnotationStoreException,
+		AnnotationHasReplyException, AnnotationNotFoundException, UnsupportedEncodingException {
 		
 		AnnotationStore db = null;
-				
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
 			
-			Annotation a = jsonMapper.readValue(annotation, Annotation.class);
+			Annotation old = getAnnotation(annotation.getID());
 			
+			// Only the author is allowed to update 
+			if (old.getCreator() != annotation.getCreator())
+				throw new AnnotationStoreException();
+			
+			// Make sure no-one messed with the server-generated values
+			annotation.setCreated(old.getCreated());
+
 			// Set modfied timestamp to now
-			a.setModified(new Date());
+			annotation.setModified(new Date());
 			
-			annotationId = db.updateAnnotation(URLDecoder.decode(annotationId, URL_ENCODING), a);
-		} catch (IOException e) {
-			// Should never happen (except in case of DB inconsistency)
-			throw new RuntimeException(e);
+			// Update
+			db.updateAnnotation(annotation.getID(), annotation);
 		} finally {
 			if(db != null) db.disconnect();
 		}	
-		return Response.ok().entity(annotationId.toString()).header("Location", URIBuilder.toURI(getConfig().getServerBaseURL(), annotationId)).build(); 
+		
+		return annotation;
 	}
 	
 	protected void deleteAnnotation(@PathParam("id") String annotationId)

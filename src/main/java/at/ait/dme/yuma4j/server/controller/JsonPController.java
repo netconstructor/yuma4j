@@ -16,16 +16,16 @@ import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
-import at.ait.dme.yuma4j.server.URIBuilder;
 
 @Path("/api/annotation/jsonp")
-public class JsonPController extends AbstractJsonController {
+public class JsonPController extends AbstractController {
 	
     /**
      * Log message String constants
      */
     private static final String LOG_LIST = " Listing annotations for object ";
     private static final String LOG_CREATE = " Creating new annotation: ";
+    private static final String LOG_UPDATE = " Updating annotation: ";
     private static final String LOG_DELETE = " Deleting annotation ";
 	
     @GET
@@ -35,6 +35,8 @@ public class JsonPController extends AbstractJsonController {
 
 		log.info(servletRequest.getRemoteAddr() + LOG_LIST + objectURI);
 		
+		// tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
+		
 		String jsonp = callback + "(" + super.listAnnotations(objectURI) + ");";
 		return Response.ok().entity(jsonp).build();
 	}
@@ -43,14 +45,21 @@ public class JsonPController extends AbstractJsonController {
 	@Path("/create")
 	public Response createAnnotation(@QueryParam("json") String json, @QueryParam("callback") String callback)
 			throws AnnotationStoreException, JsonParseException, JsonMappingException, AnnotationModifiedException,
-			IOException {
+			IOException, AnnotationHasReplyException, AnnotationNotFoundException {
 
-		log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
-		
-		Annotation a = super.createAnnotation(json);
-		String jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
-		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getID()))
-			.entity(jsonp).build();
+		String jsonp;
+		Annotation a = jsonMapper.readValue(json, Annotation.class);
+		if (a.getID() == null) {
+			log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
+			a = super.createAnnotation(a);
+			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
+		} else {
+			log.info(servletRequest.getRemoteAddr() + LOG_UPDATE + json);
+			a = super.updateAnnotation(a);
+			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
+		}
+			
+		return Response.ok().entity(jsonp).build();
 	}
 	
 	@GET

@@ -21,10 +21,12 @@ public class EmbeddedAnnotationServer {
 
 	public static void main(String[] args) throws Exception {
 		start();
+		/*
 		log.info("Press ENTER (inside the console window) to stop");
 		System.in.read();
 		log.info("Stopping embedded Jetty server"); 
 		stop();
+		*/
 	}
 	
 	public static String getApplicationURL() {

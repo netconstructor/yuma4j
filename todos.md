@@ -1,6 +1,6 @@
 # TODOs
 
-* Create a Gradle task that launches the Dev mode server
+* Documentation!
 * The whole project could really use a code review
 * JSON serialization of AnnotationTree (custom serializer?)
 * Review/revise JavaDoc!

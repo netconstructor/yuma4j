@@ -7,6 +7,8 @@ package at.ait.dme.yuma4j;
  */
 public class PlainLiteral extends AbstractModelPOJO {
 
+	private static final long serialVersionUID = 7253408804885981918L;
+
 	/**
 	 * The value (MANDATORY)
 	 */

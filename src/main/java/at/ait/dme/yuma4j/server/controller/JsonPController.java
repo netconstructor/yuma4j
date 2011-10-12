@@ -26,6 +26,7 @@ public class JsonPController extends AbstractJsonController {
      */
     private static final String LOG_LIST = " Listing annotations for object ";
     private static final String LOG_CREATE = " Creating new annotation: ";
+    private static final String LOG_DELETE = " Deleting annotation ";
 	
     @GET
     @Path("/list")
@@ -48,17 +49,18 @@ public class JsonPController extends AbstractJsonController {
 		
 		Annotation a = super.createAnnotation(json);
 		String jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
-		System.out.println(jsonp);
 		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getID()))
 			.entity(jsonp).build();
 	}
 	
 	@GET
 	@Path("/delete")
-	public Response deleteAnnotation(@QueryParam("id") String annotationId, @QueryParam("callback") String callback)
+	public Response deleteAnnotation(@QueryParam("id") String id, @QueryParam("callback") String callback)
 			throws UnsupportedEncodingException, AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
 		
-		super.deleteAnnotation(annotationId);
+		log.info(servletRequest.getRemoteAddr() + LOG_DELETE + id);
+		
+		super.deleteAnnotation(id);
 		
 		// response to DELETE without a body should return 204 NO CONTENT see 
 		// http://www.w3.org/Protocols/rfc2616/rfc2616.html

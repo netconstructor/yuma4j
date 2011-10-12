@@ -7,6 +7,8 @@ package at.ait.dme.yuma4j;
  */
 public class User extends AbstractModelPOJO {
 
+	private static final long serialVersionUID = 6615570115330996726L;
+
 	/**
 	 * The user screen name (MANDATORY)
 	 */

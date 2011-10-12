@@ -13,6 +13,8 @@ import java.util.List;
  */
 public class SemanticTag extends AbstractModelPOJO {
 
+	private static final long serialVersionUID = 6212373048916944181L;
+
 	/**
 	 * The URI (MANDATORY)
 	 */

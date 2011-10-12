@@ -11,6 +11,8 @@ import java.util.List;
  */
 public class Annotation extends AbstractModelPOJO {
 
+	private static final long serialVersionUID = 8805537432094228535L;
+
 	/**
 	 * The ID of this annotation (NOTE: the annotation ID is 
 	 * usually auto-assigned by the database!)

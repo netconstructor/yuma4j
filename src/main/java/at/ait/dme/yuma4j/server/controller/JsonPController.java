@@ -8,6 +8,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
+import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
@@ -31,13 +32,12 @@ public class JsonPController extends AbstractController {
     @GET
     @Path("/list")
 	public Response listAnnotations(@QueryParam("objectURI") String objectURI, 
-			@QueryParam("callback") String callback) throws AnnotationStoreException {
+			@QueryParam("callback") String callback) throws AnnotationStoreException, JsonGenerationException, 
+			JsonMappingException, IOException {
 
 		log.info(servletRequest.getRemoteAddr() + LOG_LIST + objectURI);
-		
-		// tree = jsonMapper.writeValueAsString(db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList());
-		
-		String jsonp = callback + "(" + super.listAnnotations(objectURI) + ");";
+				
+		String jsonp = callback + "(" + jsonMapper.writeValueAsString(super.listAnnotations(objectURI)) + ");";
 		return Response.ok().entity(jsonp).build();
 	}
     
@@ -59,6 +59,7 @@ public class JsonPController extends AbstractController {
 			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
 		}
 			
+		System.out.println(jsonp);
 		return Response.ok().entity(jsonp).build();
 	}
 	

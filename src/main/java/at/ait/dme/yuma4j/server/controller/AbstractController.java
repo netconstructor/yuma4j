@@ -113,12 +113,10 @@ public class AbstractController {
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
-			
 			Annotation old = getAnnotation(annotation.getID());
+			db.disconnect();
 			
-			// Only the author is allowed to update 
-			if (old.getCreator() != annotation.getCreator())
-				throw new AnnotationStoreException();
+			// TODO verify whether the logged in user is really the creator 
 			
 			// Make sure no-one messed with the server-generated values
 			annotation.setCreated(old.getCreated());
@@ -127,6 +125,7 @@ public class AbstractController {
 			annotation.setModified(new Date());
 			
 			// Update
+			db.connect();
 			db.updateAnnotation(annotation.getID(), annotation);
 		} finally {
 			if(db != null) db.disconnect();

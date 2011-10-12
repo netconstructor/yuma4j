@@ -15,7 +15,7 @@ public class Annotation extends AbstractModelPOJO {
 	 * The ID of this annotation (NOTE: the annotation ID is 
 	 * usually auto-assigned by the database!)
 	 */
-	private String annotationID = null;
+	private String id = null;
 	
 	/**
 	 * The URI of the object which this annotation 
@@ -96,12 +96,12 @@ public class Annotation extends AbstractModelPOJO {
 			   this.mediatype != null;
 	}
 	
-	public String getAnnotationID() {
-		return annotationID;
+	public String getID() {
+		return id;
 	}
 
-	public void setAnnotationID(String annotationID) {
-		this.annotationID = annotationID;
+	public void setID(String id) {
+		this.id = id;
 	}
 	
 	public String getObjectURI() {
@@ -222,7 +222,7 @@ public class Annotation extends AbstractModelPOJO {
 		if (!a.getScope().equals(this.getScope()))
 			return false;
 		
-		if (!equalsNullable(a.getAnnotationID(), this.getAnnotationID()))
+		if (!equalsNullable(a.getID(), this.getID()))
 			return false;
 		
 		if (!equalsNullable(a.getRootID(), this.getRootID()))
@@ -254,7 +254,7 @@ public class Annotation extends AbstractModelPOJO {
 
 	@Override
 	public int hashCode() {
-		return (annotationID + 
+		return (id + 
 				objectURI + 
 				created.getTime() + 
 				modified.getTime() + 

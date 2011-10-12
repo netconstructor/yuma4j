@@ -75,7 +75,7 @@ public abstract class BaseAnnotationListPage extends WebPage {
 		protected void populateItem(ListItem<Annotation> item) {
 			Annotation a = (Annotation) item.getModelObject();
 			item.add(new ExternalLink("reply-feed-url", 
-					SERVER_BASE_URL + "feeds/replies/" + a.getAnnotationID()));
+					SERVER_BASE_URL + "feeds/replies/" + a.getID()));
 			
 			HashMap<String, String> params = new HashMap<String, String>();
 			params.put(UserPage.PARAM_USERNAME, a.getCreator().getUsername());
@@ -106,7 +106,7 @@ public abstract class BaseAnnotationListPage extends WebPage {
 			item.add(new Label("scope", a.getScope().name()));
 			item.add(new TagListView("tags", a.getTags()));
 			
-			String uri = URIBuilder.toURI(SERVER_BASE_URL, a.getAnnotationID()).toString();
+			String uri = URIBuilder.toURI(SERVER_BASE_URL, a.getID()).toString();
 			item.add(new ExternalLink("uri", uri, uri));
 				
 			item.add(new ExternalLink("dl-json", uri + ".json", "JSON"));

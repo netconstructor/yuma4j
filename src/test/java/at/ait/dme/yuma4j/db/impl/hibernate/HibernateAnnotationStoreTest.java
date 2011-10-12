@@ -36,7 +36,7 @@ public class HibernateAnnotationStoreTest {
 		String id = db.createAnnotation(before);
 		log.info("Created annotation with ID " + id);
 		Assert.assertNotNull(id);
-		Assert.assertEquals(id, before.getAnnotationID());
+		Assert.assertEquals(id, before.getID());
 		
 		// Read
 		Annotation annotation = db.getAnnotation(id);
@@ -49,14 +49,14 @@ public class HibernateAnnotationStoreTest {
 		log.info("Annotation updated, new ID " + id);
 		Assert.assertNotNull(id);
 		Assert.assertFalse(before.equals(after));
-		Assert.assertEquals(id, after.getAnnotationID());
+		Assert.assertEquals(id, after.getID());
 		
 		// Create reply
 		Annotation reply = jsonMapper.readValue(JsonTestData.reply(id, id), Annotation.class);
 		String replyID = db.createAnnotation(reply);
 		log.info("Created reply to " + id + ", reply ID " + replyID);
 		Assert.assertNotNull(replyID);
-		Assert.assertEquals(replyID, reply.getAnnotationID());
+		Assert.assertEquals(replyID, reply.getID());
 		
 		// Search
 		List<Annotation> annotations = db.findAnnotations("SUSPENSION BRIDGE");

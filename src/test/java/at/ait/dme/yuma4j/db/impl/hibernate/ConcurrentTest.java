@@ -96,7 +96,7 @@ public class ConcurrentTest {
 			try {
 				Annotation foundAnnotation = db2.getAnnotation(id.toString());
 
-				assertEquals(id, foundAnnotation.getAnnotationID());
+				assertEquals(id, foundAnnotation.getID());
 			} catch(AnnotationNotFoundException e) {
 				fail("created annotation not found");
 			}

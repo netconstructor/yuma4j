@@ -5,7 +5,6 @@ import java.io.UnsupportedEncodingException;
 
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
-import javax.ws.rs.PathParam;
 import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 
@@ -49,13 +48,14 @@ public class JsonPController extends AbstractJsonController {
 		
 		Annotation a = super.createAnnotation(json);
 		String jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
-		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getAnnotationID()))
+		System.out.println(jsonp);
+		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getID()))
 			.entity(jsonp).build();
 	}
 	
 	@GET
 	@Path("/delete")
-	public Response deleteAnnotation(@PathParam("id") String annotationId, @QueryParam("callback") String callback)
+	public Response deleteAnnotation(@QueryParam("id") String annotationId, @QueryParam("callback") String callback)
 			throws UnsupportedEncodingException, AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
 		
 		super.deleteAnnotation(annotationId);

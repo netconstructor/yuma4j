@@ -93,8 +93,8 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			em.persist(entity);														
 			tx.commit();
 			
-			String id = Long.toString(entity.getAnnotationID());
-			annotation.setAnnotationID(id);
+			String id = Long.toString(entity.getID());
+			annotation.setID(id);
 			return id;
 		} catch(AnnotationModifiedException e) {
 			throw e;
@@ -117,8 +117,8 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			em.persist(entity);
 			tx.commit();
 			
-			String id = Long.toString(entity.getAnnotationID());
-			annotation.setAnnotationID(id);
+			String id = Long.toString(entity.getID());
+			annotation.setID(id);
 			return id;	
 		} catch (Throwable t) {
 			tx.rollback();
@@ -242,7 +242,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			Annotation a = getAnnotation(annotationId);
 			String rootId;
 			if (a.getRootID() == null) {
-				rootId = a.getAnnotationID();
+				rootId = a.getID();
 			} else {
 				rootId = a.getRootID();
 			}
@@ -334,7 +334,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 		for (AnnotationEntity a : all) {
 			if (a.getParentID().equals(parentId)) {
 				children.add(a);
-				getChildren(all, children, a.getAnnotationID());
+				getChildren(all, children, a.getID());
 			}
 		}
 	}

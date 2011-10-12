@@ -34,10 +34,10 @@ public class RepliesPage extends BaseAnnotationListPage {
 		if (parent == null) 
 			throw new AbortWithHttpStatusException(404, true);
 
-		setTitle(TITLE + "'" + parent.getAnnotationID() + "'");
-		setHeadline(HEADLINE + "'" + parent.getAnnotationID() + "'");		
-		setAnnotations(getReplies(parent.getAnnotationID()));
-		setFeedURL(config.getServerBaseURL() + FEEDS + parent.getAnnotationID());
+		setTitle(TITLE + "'" + parent.getID() + "'");
+		setHeadline(HEADLINE + "'" + parent.getID() + "'");		
+		setAnnotations(getReplies(parent.getID()));
+		setFeedURL(config.getServerBaseURL() + FEEDS + parent.getID());
 	}
 	
 	private Annotation getParentAnnotation(String id) {

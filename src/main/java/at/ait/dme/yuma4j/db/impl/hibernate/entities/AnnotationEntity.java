@@ -72,7 +72,7 @@ public class AnnotationEntity implements Serializable {
 	
 	@Id
 	@GeneratedValue
-	private Long annotationID;
+	private Long id;
 	
     @Column(length = 512)
 	private String objectURI;
@@ -137,7 +137,7 @@ public class AnnotationEntity implements Serializable {
 		Annotation a = 
 			new Annotation(objectURI, creator.toUser(),	created, modified, mediatype);
 		
-		a.setAnnotationID(Long.toString(annotationID));
+		a.setID(Long.toString(id));
 		
 		if (rootID != null)
 			a.setRootID(Long.toString(rootID));
@@ -155,12 +155,12 @@ public class AnnotationEntity implements Serializable {
 		return a;
 	}
 	
-	public void setAnnotationID(Long id) {
-		this.annotationID = id;
+	public void setID(Long id) {
+		this.id = id;
 	}
 
-	public Long getAnnotationID() {
-		return annotationID;
+	public Long getID() {
+		return id;
 	}
 	
 	public void setObjectURI(String objectURI) {

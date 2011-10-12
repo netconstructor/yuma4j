@@ -81,7 +81,9 @@ public class AbstractJsonController {
 			a.setModified(new Date());
 			
 			// TODO get user from session! This is just a dummy for now
-			a.setCreator(new User("guest"));			
+			a.setCreator(new User("guest"));
+			
+			db.createAnnotation(a);
 		} finally {
 			if (db != null) db.disconnect();
 		}

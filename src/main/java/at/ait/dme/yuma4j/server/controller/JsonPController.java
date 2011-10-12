@@ -48,9 +48,9 @@ public class JsonPController extends AbstractJsonController {
 		log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
 		
 		Annotation a = super.createAnnotation(json);
-		String response = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
+		String jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
 		return Response.created(URIBuilder.toURI(getConfig().getServerBaseURL(), a.getAnnotationID()))
-			.entity(response).build();
+			.entity(jsonp).build();
 	}
 	
 	@GET

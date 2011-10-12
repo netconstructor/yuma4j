@@ -15,8 +15,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
 
-import org.hibernate.cfg.Configuration;
-
 import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.AnnotationTree;
 import at.ait.dme.yuma4j.db.AnnotationStore;

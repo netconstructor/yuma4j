@@ -1,4 +1,4 @@
-package at.ait.dme.yuma4j.server.controller;
+package at.ait.dme.yuma4j.server.controller.json;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
@@ -17,6 +17,7 @@ import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
+import at.ait.dme.yuma4j.server.controller.AbstractController;
 
 @Path("/api/annotation/jsonp")
 public class JsonPController extends AbstractController {

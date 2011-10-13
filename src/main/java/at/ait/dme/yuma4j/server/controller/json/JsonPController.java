@@ -38,7 +38,7 @@ public class JsonPController extends AbstractController {
 
 		log.info(servletRequest.getRemoteAddr() + LOG_LIST + objectURI);
 				
-		String jsonp = callback + "(" + jsonMapper.writeValueAsString(super.listAnnotations(objectURI)) + ");";
+		String jsonp = callback + "(" + jsonMapper.writeValueAsString(super._listAnnotations(objectURI)) + ");";
 		return Response.ok().entity(jsonp).build();
 	}
     
@@ -52,11 +52,11 @@ public class JsonPController extends AbstractController {
 		Annotation a = jsonMapper.readValue(json, Annotation.class);
 		if (a.getID() == null) {
 			log.info(servletRequest.getRemoteAddr() + LOG_CREATE + json);
-			a = super.createAnnotation(a);
+			a = super._createAnnotation(a);
 			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
 		} else {
 			log.info(servletRequest.getRemoteAddr() + LOG_UPDATE + json);
-			a = super.updateAnnotation(a);
+			a = super._updateAnnotation(a);
 			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
 		}
 			
@@ -70,7 +70,7 @@ public class JsonPController extends AbstractController {
 		
 		log.info(servletRequest.getRemoteAddr() + LOG_DELETE + id);
 		
-		super.deleteAnnotation(id);
+		super._deleteAnnotation(id);
 		
 		return Response.ok().entity(callback + "();").build(); 
 	}

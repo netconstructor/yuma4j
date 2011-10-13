@@ -44,7 +44,7 @@ public class AbstractController {
     	return ServerConfig.getInstance(servletContext.getInitParameter(ServerConfig.INIT_PARAM_PROPERTIES));
     }
     
-	protected List<Annotation> listAnnotations(String objectURI) throws AnnotationStoreException {
+	protected List<Annotation> _listAnnotations(String objectURI) throws AnnotationStoreException {
 		AnnotationStore db = null;
 		List<Annotation> tree = null;
 		
@@ -61,8 +61,28 @@ public class AbstractController {
 
 		return tree;
 	}
+	
+	protected Annotation _getAnnotation(@PathParam("id") String annotationId)
+		throws AnnotationStoreException, AnnotationNotFoundException, UnsupportedEncodingException {
+		
+		AnnotationStore db = null;
+		Annotation annotation = null;
+				
+		try {
+			db = getConfig().getAnnotationStore();
+			db.connect();
+			annotation = db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
+		} catch (IOException e) {
+			// Should never happen (except in case of DB inconsistency)
+			throw new RuntimeException(e);
+		} finally {
+			if(db != null) db.disconnect();
+		}
+		
+		return annotation;
+	}
 
-	protected Annotation createAnnotation(Annotation annotation) throws AnnotationStoreException,
+	protected Annotation _createAnnotation(Annotation annotation) throws AnnotationStoreException,
 		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
 		
 		AnnotationStore db = null;
@@ -86,27 +106,7 @@ public class AbstractController {
 		return annotation;
 	}
 	
-	protected Annotation getAnnotation(@PathParam("id") String annotationId)
-		throws AnnotationStoreException, AnnotationNotFoundException, UnsupportedEncodingException {
-		
-		AnnotationStore db = null;
-		Annotation annotation = null;
-				
-		try {
-			db = getConfig().getAnnotationStore();
-			db.connect();
-			annotation = db.getAnnotation(URLDecoder.decode(annotationId, URL_ENCODING));
-		} catch (IOException e) {
-			// Should never happen (except in case of DB inconsistency)
-			throw new RuntimeException(e);
-		} finally {
-			if(db != null) db.disconnect();
-		}
-		
-		return annotation;
-	}
-	
-	protected Annotation updateAnnotation(Annotation annotation) throws AnnotationStoreException,
+	protected Annotation _updateAnnotation(Annotation annotation) throws AnnotationStoreException,
 		AnnotationHasReplyException, AnnotationNotFoundException, UnsupportedEncodingException {
 		
 		AnnotationStore db = null;
@@ -132,7 +132,7 @@ public class AbstractController {
 		return annotation;
 	}
 	
-	protected void deleteAnnotation(@PathParam("id") String annotationId)
+	protected void _deleteAnnotation(@PathParam("id") String annotationId)
 		throws AnnotationStoreException, AnnotationHasReplyException, UnsupportedEncodingException, AnnotationNotFoundException {
 		
 		AnnotationStore db = null;

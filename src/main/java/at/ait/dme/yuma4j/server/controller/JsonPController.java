@@ -59,7 +59,6 @@ public class JsonPController extends AbstractController {
 			jsonp = callback + "(" + jsonMapper.writeValueAsString(a) + ");";
 		}
 			
-		System.out.println(jsonp);
 		return Response.ok().entity(jsonp).build();
 	}
 	

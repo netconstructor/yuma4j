@@ -17,7 +17,7 @@ eclipse {
 	}
 }
 
-task(runServer, dependsOn: 'testClasses', type: JavaExec) {
+task(startDemoServer, dependsOn: 'testClasses', type: JavaExec) {
 	main = 'at.ait.dme.yuma4j.bootstrap.EmbeddedAnnotationServer'
 	classpath = sourceSets.test.runtimeClasspath
 }

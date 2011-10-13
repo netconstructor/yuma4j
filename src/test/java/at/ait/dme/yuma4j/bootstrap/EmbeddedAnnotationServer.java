@@ -11,7 +11,7 @@ import org.mortbay.jetty.webapp.WebAppContext;
 
 public class EmbeddedAnnotationServer {
 	
-	private static final int SERVER_PORT = 8080;
+	private static final int SERVER_PORT = 8081;
 	
 	private static final String CONTEXT_PATH = "/yuma4j-server";
 	
@@ -20,21 +20,11 @@ public class EmbeddedAnnotationServer {
 	private static Logger log = Logger.getLogger(EmbeddedAnnotationServer.class);
 
 	public static void main(String[] args) throws Exception {
-		start();
-		/*
-		log.info("Press ENTER (inside the console window) to stop");
-		System.in.read();
-		log.info("Stopping embedded Jetty server"); 
-		stop();
-		*/
+		start(null);
 	}
 	
 	public static String getApplicationURL() {
 		return "http://localhost:" + SERVER_PORT + CONTEXT_PATH;
-	}
-	
-	public static void start() throws Exception {
-		start(null);
 	}
 	
 	public static void start(String propertiesFile) throws Exception {
@@ -59,8 +49,9 @@ public class EmbeddedAnnotationServer {
 			
 			server.addHandler(context);
 			
-			log.info("Starting embedded Jetty server at " + getApplicationURL());
+			log.info("Starting Annotation Server in embedded Jetty at " + getApplicationURL());
 			server.start();
+			log.info("Annotation Server available at " + getApplicationURL());
 		}
 	}
 	

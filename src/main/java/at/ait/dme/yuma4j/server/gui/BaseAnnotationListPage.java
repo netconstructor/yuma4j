@@ -113,7 +113,6 @@ public abstract class BaseAnnotationListPage extends WebPage {
 			item.add(new ExternalLink("dl-rdf-xml", uri + ".rdf", "RDF/XML"));
 			item.add(new ExternalLink("dl-rdf-n3", uri + ".n3", "N3"));
 			item.add(new ExternalLink("dl-rdf-turtle", uri + ".turtle", "Turtle"));
-			item.add(new ExternalLink("dl-rdf-xml-oac", uri + ".oac", "OAC (Beta)"));
 			
 			/*
 			item.add(new ExternalLink("open-in-client", 

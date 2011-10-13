@@ -26,7 +26,6 @@ public class Search extends WebPage {
 	public Search(final PageParameters parameters) {
         add(new SearchForm("form", new Query()));
         add(new BookmarkablePageLink("link-timeline", TimelinePage.class));
-        add(new BookmarkablePageLink("link-advanced", AdvancedSearch.class));
         add(new BookmarkablePageLink("link-login", Dashboard.class));
     }
         

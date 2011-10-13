@@ -78,7 +78,7 @@ public class RDFController extends AbstractController {
 		UnsupportedEncodingException, AnnotationStoreException, AnnotationNotFoundException {
 		
 		Annotation a = super._getAnnotation(id);
-		return new RDFSerializer().serialize(a, serialization);
+		return new RDFSerializer(getConfig().getServerBaseURL()).serialize(a, serialization);
 	}
 	
 }

@@ -4,8 +4,12 @@ import java.io.StringWriter;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.ModelFactory;
+import com.hp.hpl.jena.rdf.model.Resource;
+import com.hp.hpl.jena.vocabulary.RDF;
 
 import at.ait.dme.yuma4j.Annotation;
+import at.ait.dme.yuma4j.server.URIBuilder;
+import at.ait.dme.yuma4j.server.controller.rdf.serializer.BodyPropertiesAppender;
 
 /**
  * Serializer for OAC RDF (in different serialization languages).
@@ -14,38 +18,60 @@ import at.ait.dme.yuma4j.Annotation;
  */
 public class RDFSerializer {
 	
-	public static final String NS_OAC = "http://www.openannotation.org/ns/";
+	private static final String NS_OAC = "http://www.openannotation.org/ns/";
+	private static final String PREFIX_OAC = "oac";
+	private static final String ANNOTATION = "Annotation";
+	private static final String BODY_FRAGMENT = "#body";
+	private static final String BODY = "Body";
+	private static final String HASBODY = "hasBody";
+	private static final String HASTARGET = "hasTarget";
+	
+	private String serverBaseURL;
 
+	public RDFSerializer(String serverBaseURL) {
+		this.serverBaseURL = serverBaseURL;
+	}
+	
 	public String serialize(Annotation annotation, String serialization) {
 		Model model = ModelFactory.createDefaultModel();
-		model.setNsPrefix("oac", NS_OAC);
+		model.setNsPrefix(PREFIX_OAC, NS_OAC);
 		
-		// Resource body = createBodyResource(annotation, model);
-		// createAnnotationResource(body);
+		Resource body = createBodyResource(annotation, model);
+		createAnnotationResource(annotation, model, body);
 		
 		StringWriter sw = new StringWriter();
 		model.write(sw, serialization);
 		return sw.toString();
 	}
 	
-	/*
-	private Resource createAnnotationResource(Resource body) {
-		Resource ret = model.createResource(
-			URIBuilder.toURI(annotation.getID()).toString());
+	private Resource createBodyResource(Annotation a, Model m) {
+		Resource body = 
+			m.createResource(URIBuilder.toURI(serverBaseURL, a.getID()) + BODY_FRAGMENT);
 		
-		addBasicProperties(ret, body);
-		new AnnotationPropertiesAppender(ret).appendProperties(annotation);
-		return ret;
-	}
-	
-	private Resource createBodyResource(Annotation annotation, Model model) {
-		Resource body = model.createResource(createBodyUri(annotation.getID()));
-		
-		body.addProperty(RDF.type, model.createProperty(NS_OAC, "Body"));
-		new BodyPropertiesAppender(body, model).appendProperties(annotation);
+		body.addProperty(RDF.type, m.createProperty(NS_OAC, BODY));
+		new BodyPropertiesAppender(body, m).appendProperties(a);
 		
 		return body;
 	}
+
+	private Resource createAnnotationResource(Annotation a, Model m, Resource body) {
+		Resource annotationResource = 
+			m.createResource(URIBuilder.toURI(serverBaseURL, a.getID()).toString());
+		
+		annotationResource.addProperty(RDF.type, m.createProperty(NS_OAC, ANNOTATION));
+		annotationResource.addProperty(m.createProperty(NS_OAC, HASTARGET), createTarget(a, m));	
+		annotationResource.addProperty(m.createProperty(NS_OAC, HASBODY), body);
+		
+		// new AnnotationPropertiesAppender(ret).appendProperties(annotation);
+		return annotationResource;
+	}
+	
+	private String createTarget(Annotation a, Model m) {
+		return a.getObjectURI() + "#" + a.getFragment();
+	}
+	
+	
+	/*
 	
 	private void addBodyNode(Annotation annotation, Model model) {
 		initResourceCreation(annotation, model);
@@ -56,25 +82,7 @@ public class RDFSerializer {
 	
 
 	
-	private void addBasicProperties(Resource annotResource, Resource body)
-	{
-		if (isReplyAnnotation()) {
-			annotResource.addProperty(RDF.type, model.createProperty(NS_OAC, "Reply"));
-			addReplyTargets(annotResource);
-		}
-		else {
-			annotResource.addProperty(RDF.type, model.createProperty(NS_OAC, "Annotation"));
-			addSingleTarget(annotResource);
-		}
-		
-		annotResource.addProperty(
-			model.createProperty(NS_OAC, "hasBody"), 
-			body);
-	}
-	
-	private boolean isReplyAnnotation() {
-		return annotation.getParentID() != null && !annotation.getParentID().isEmpty();
-	}
+
 	
 	private void addReplyTargets(Resource annotationResource) {
 		annotationResource.addProperty(
@@ -86,26 +94,6 @@ public class RDFSerializer {
 				model.createProperty(NS_OAC, "hasTarget"),
 				createConstrainedTarget());	
 		}		
-	}
-	
-	private void addSingleTarget(Resource annotationResource) {
-		annotationResource.addProperty(
-			model.createProperty(NS_OAC, "hasTarget"),
-			createTarget());		
-	}
-	
-	private Resource createTarget() {
-		// if (annotation.getFragment() == null) {
-			return createNonConstrainedTarget();
-		// } else {
-		// 	return createConstrainedTarget();
-		// }
-	}
-	
-	private Resource createNonConstrainedTarget() {
-		Resource target = model.createResource(annotation.getObjectURI().toString());
-		target.addProperty(RDF.type, model.createProperty(NS_OAC, "Target"));
-		return target;
 	}
 	
 

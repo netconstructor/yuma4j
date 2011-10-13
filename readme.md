@@ -52,7 +52,7 @@ will generate Eclipse project files.
 
 ``gradle startDemoServer``
 
-will launch the demo annotation storage server. The demo server runs with an embedded in-memory
+will launch a local demo annotation storage server. The demo server runs with an embedded in-memory
 database. There is no need to set up any additional components on your system. After launch,
 it will be available at 
 

@@ -5,4 +5,4 @@ package at.ait.dme.yuma4j;
  * 
  * @author Rainer Simon <rainer.simon@ait.ac.at>
  */
-public enum MediaType { IMAGE, SEADRAGON; }
+public enum MediaType { IMAGE, MAP, SEADRAGON; }

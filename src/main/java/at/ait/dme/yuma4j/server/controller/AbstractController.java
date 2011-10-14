@@ -98,6 +98,9 @@ public class AbstractController {
 			// TODO get user from session! This is just a dummy for now
 			annotation.setCreator(new User("guest"));
 			
+			if (!annotation.isValid())
+				throw new AnnotationStoreException();
+			
 			db.createAnnotation(annotation);
 		} finally {
 			if (db != null) db.disconnect();

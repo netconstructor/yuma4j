@@ -67,10 +67,21 @@ public class AnnotationTest {
 	public void testInvalidAnnotations() throws JsonParseException, IOException {
 		Annotation a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_OBJECT_URI, Annotation.class);
 		Assert.assertFalse(a.isValid());
+		
+		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CONTEXT_URI, Annotation.class);
+		Assert.assertFalse(a.isValid());
+
 		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CREATOR, Annotation.class);
+		Assert.assertFalse(a.isValid());
+
 		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CREATED, Annotation.class);
+		Assert.assertFalse(a.isValid());
+
 		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_MODIFIED, Annotation.class);
+		Assert.assertFalse(a.isValid());
+
 		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_MEDIATYPE, Annotation.class);
+		Assert.assertFalse(a.isValid());
 	}
 
 }

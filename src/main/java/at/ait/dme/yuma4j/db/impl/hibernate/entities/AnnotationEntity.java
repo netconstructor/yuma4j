@@ -77,6 +77,9 @@ public class AnnotationEntity implements Serializable {
     @Column(length = 512)
 	private String objectURI;
     
+    @Column(length = 512)
+    private String contextURI;
+    
     @Column
 	private UserEntity creator;
 
@@ -113,6 +116,7 @@ public class AnnotationEntity implements Serializable {
 	
 	public AnnotationEntity(Annotation a)  {
 		this.objectURI = a.getObjectURI();
+		this.contextURI = a.getContextURI();
 		this.creator = new UserEntity(a.getCreator());
 		this.created = a.getCreated();
 		this.modified = a.getModified();
@@ -135,7 +139,7 @@ public class AnnotationEntity implements Serializable {
 
 	public Annotation toAnnotation() throws AnnotationStoreException {
 		Annotation a = 
-			new Annotation(objectURI, creator.toUser(),	created, modified, mediatype);
+			new Annotation(objectURI, contextURI, creator.toUser(),	created, modified, mediatype);
 		
 		a.setID(Long.toString(id));
 		

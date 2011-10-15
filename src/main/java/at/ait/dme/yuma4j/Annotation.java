@@ -28,6 +28,13 @@ public class Annotation extends AbstractModelPOJO {
 	private String objectURI;
 	
 	/**
+	 * The URI of the Web context in which the object was 
+	 * annotated, e.g. the URL of the Web page containing 
+	 * the annotated image (MANDATORY)
+	 */
+	private String contextURI;
+	
+	/**
 	 * The creator of this annotation (MANDATORY)
 	 */
 	private User creator;
@@ -84,8 +91,9 @@ public class Annotation extends AbstractModelPOJO {
 	// Required for JSON mapping
 	Annotation() { }
 	
-	public Annotation(String objectURI, User creator, Date created, Date modified, MediaType mediatype) {
+	public Annotation(String objectURI, String contextURI, User creator, Date created, Date modified, MediaType mediatype) {
 		this.objectURI = objectURI;
+		this.contextURI = contextURI;
 		this.creator = creator;
 		this.created = created;
 		this.modified = modified;
@@ -95,6 +103,7 @@ public class Annotation extends AbstractModelPOJO {
 	@JsonIgnore
 	public boolean isValid() {
 		return this.objectURI != null &&
+			   this.contextURI != null &&
 			   this.creator != null &&
 			   this.created != null &&
 			   this.modified != null &&
@@ -116,6 +125,15 @@ public class Annotation extends AbstractModelPOJO {
 	// Required for JSON mapping
 	void setObjectURI(String objectURI) {
 		this.objectURI = objectURI;
+	}
+	
+	public String getContextURI() {
+		return contextURI;
+	}
+	
+	// Required for JSON mapping
+	void setContextURI(String contextURI) {
+		this.contextURI = contextURI;
 	}
 
 	public User getCreator() {
@@ -212,6 +230,9 @@ public class Annotation extends AbstractModelPOJO {
 		if (!a.getObjectURI().equals(this.getObjectURI()))
 			return false;
 		
+		if (!a.getContextURI().equals(this.getContextURI()))
+			return false;
+		
 		if (!a.getCreator().equals(this.getCreator()))
 			return false;
 
@@ -261,6 +282,7 @@ public class Annotation extends AbstractModelPOJO {
 	public int hashCode() {
 		return (id + 
 				objectURI + 
+				contextURI +
 				created.getTime() + 
 				modified.getTime() + 
 				creator.getUsername()).hashCode();

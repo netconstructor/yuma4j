@@ -74,7 +74,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			
 			// In case of a reply we have to ensure that the parent is unchanged
 			AnnotationEntity entity = new AnnotationEntity(annotation);
-			if (entity.getParentID() != null) {
+			if (entity.getIsReplyTo() != null) {
 				// An annotation gets a new ID on every update. Therefore, checking for
 				// existence is sufficient here.			
 				AnnotationEntity parent = em.find(AnnotationEntity.class, entity.getParentID());				

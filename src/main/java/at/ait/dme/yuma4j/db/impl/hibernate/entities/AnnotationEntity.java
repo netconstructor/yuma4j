@@ -78,7 +78,7 @@ public class AnnotationEntity implements Serializable {
 	private String objectURI;
     
     @Column(length = 512)
-    private String contextURI;
+    private ContextEntity context;
     
     @Column
 	private UserEntity creator;
@@ -95,10 +95,7 @@ public class AnnotationEntity implements Serializable {
 	private MediaType mediatype;
 	
 	@Column
-	private Long rootID;
-	
-	@Column
-	private Long parentID;
+	private Long isReplyTo;
 	
     @Column(length = 4096)		
 	private String text;
@@ -116,17 +113,14 @@ public class AnnotationEntity implements Serializable {
 	
 	public AnnotationEntity(Annotation a)  {
 		this.objectURI = a.getObjectURI();
-		this.contextURI = a.getContextURI();
+		this.context = new ContextEntity(a.getContext());
 		this.creator = new UserEntity(a.getCreator());
 		this.created = a.getCreated();
 		this.modified = a.getModified();
 		this.mediatype = a.getMediatype();
 		
-		if (a.getRootID() != null && !a.getRootID().isEmpty())
-			this.rootID = Long.parseLong(a.getRootID());
-		
-		if (a.getParentID() != null && !a.getParentID().isEmpty())
-			this.parentID = Long.parseLong(a.getParentID());
+		if (a.getIsReplyTo() != null && !a.getIsReplyTo().isEmpty())
+			this.isReplyTo = Long.parseLong(a.getIsReplyTo());
 		
 		this.text = a.getText();
 		this.fragment = a.getFragment();
@@ -139,15 +133,12 @@ public class AnnotationEntity implements Serializable {
 
 	public Annotation toAnnotation() throws AnnotationStoreException {
 		Annotation a = 
-			new Annotation(objectURI, contextURI, creator.toUser(),	created, modified, mediatype);
+			new Annotation(objectURI, context.toContext(), creator.toUser(),	created, modified, mediatype);
 		
 		a.setID(Long.toString(id));
 		
-		if (rootID != null)
-			a.setRootID(Long.toString(rootID));
-		
-		if (parentID != null)
-			a.setParentID(Long.toString(parentID));
+		if (isReplyTo != null)
+			a.setIsReplyTo(Long.toString(isReplyTo));
 		
 		a.setText(text);
 		a.setFragment(fragment);
@@ -207,20 +198,12 @@ public class AnnotationEntity implements Serializable {
 		return mediatype;
 	}
 
-	public void setRootID(Long rootID) {
-		this.rootID = rootID;
+	public void setIsReplyTo(Long replyToID) {
+		this.isReplyTo = replyToID;
 	}
 
-	public Long getRootID() {
-		return rootID;
-	}
-
-	public void setParentID(Long parentID) {
-		this.parentID = parentID;
-	}
-
-	public Long getParentID() {
-		return parentID;
+	public Long getIsReplyTo() {
+		return isReplyTo;
 	}
 
 	public void setText(String text) {

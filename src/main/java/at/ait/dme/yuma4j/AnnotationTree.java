@@ -29,17 +29,17 @@ public class AnnotationTree {
 	
 	public AnnotationTree(List<Annotation> annotations) {
 		for (Annotation a : annotations) {
-			if ((a.getParentID() == null) || a.getParentID().isEmpty()) {
+			if ((a.getIsReplyTo() == null) || a.getIsReplyTo().isEmpty()) {
 				// Add to root annotation list
 				rootAnnotations.add(a);
 			} else {
 				// Add to appropriate reply list
-				ArrayList<Annotation> replyList = replies.get(a.getParentID());
+				ArrayList<Annotation> replyList = replies.get(a.getIsReplyTo());
 				if (replyList == null) 
 					replyList = new ArrayList<Annotation>();
 				replyList.add(a);
 				
-				replies.put(a.getParentID(), replyList);
+				replies.put(a.getIsReplyTo(), replyList);
 			}
 		}
 	}

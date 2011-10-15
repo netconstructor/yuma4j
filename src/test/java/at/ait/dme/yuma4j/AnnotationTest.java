@@ -41,8 +41,7 @@ public class AnnotationTest {
 		Assert.assertEquals(dateFormat.parse("2008-10-15T04:00:00Z"), a.getCreated());
 		Assert.assertEquals(dateFormat.parse("2008-10-15T04:00:00Z"), a.getModified());
 		Assert.assertEquals(MediaType.IMAGE, a.getMediatype());
-		Assert.assertEquals(null, a.getRootID());
-		Assert.assertEquals(null, a.getParentID());
+		Assert.assertEquals(null, a.getIsReplyTo());
 		Assert.assertEquals("The 25 de Abril Bridge is a suspension bridge connecting the city of " +
 				"Lisbon, capital of Portugal, to the municipality of Almada on the left " +
 				"bank of the Tagus river. It was inaugurated on August 6, 1966 and a train " +

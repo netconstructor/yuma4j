@@ -54,18 +54,11 @@ public class Annotation extends AbstractModelPOJO {
 	private MediaType mediatype;
 	
 	/**
-	 * The ID of the root annotation, if this annotation
-	 * is a reply. A root annotation is the first annotation
-	 * in an annotation thread and does not have a root or
-	 * parent ID itself. (OPTIONAL)
+	 * If this annotation is a reply, this field holds
+	 * the ID of the 'root' annotation to which this
+	 * annotation is a reply to (OPTIONAL)
 	 */
-	private String rootID = null;
-	
-	/**
-	 * The ID of the parent annotation, if this annotation
-	 * is a reply. (OPTIONAL)
-	 */
-	private String parentID = null;
+	private String isReplyTo = null;
 	
 	/**
 	 * The text of this annotation (OPTIONAL)
@@ -168,22 +161,14 @@ public class Annotation extends AbstractModelPOJO {
 		this.mediatype = mediatype;
 	}
 
-	public String getRootID() {
-		return rootID;
+	public String getIsReplyTo() {
+		return isReplyTo;
 	}
 
-	public void setRootID(String rootId) {
-		this.rootID = rootId;
+	public void setIsReplyTo(String parentId) {
+		this.isReplyTo = parentId;
 	}
-	
-	public String getParentID() {
-		return parentID;
-	}
-	
-	public void setParentID(String parentId) {
-		this.parentID = parentId;
-	}
-	
+		
 	public String getText() {
 		return text;
 	}
@@ -250,12 +235,9 @@ public class Annotation extends AbstractModelPOJO {
 		if (!equalsNullable(a.getID(), this.getID()))
 			return false;
 		
-		if (!equalsNullable(a.getRootID(), this.getRootID()))
+		if (!equalsNullable(a.getIsReplyTo(), this.getIsReplyTo()))
 			return false;
-	
-		if (!equalsNullable(a.getParentID(), this.getParentID()))
-			return false;
-		
+
 		if (!equalsNullable(a.getText(), this.getText()))
 			return false;
 		

@@ -99,7 +99,15 @@ public abstract class BaseAnnotationListPage extends WebPage {
 			item.add(new ExternalLink("objectPage", feedPageUri, screenUri));
 			item.add(new ExternalLink("open-media", a.getObjectURI())
 			.add(new SimpleAttributeModifier("title", "Open Original File in New Window")));
-			item.add(new ExternalLink("contextURI", a.getContextURI(), a.getContextURI()));
+			
+			String ctxLabel;
+			if (a.getContext().getTitle() == null) {
+				// TODO shorten if necessary
+				ctxLabel = a.getContext().getUri();
+			} else {
+				ctxLabel = a.getContext().getTitle();
+			}
+			item.add(new ExternalLink("context", a.getContext().getUri(), ctxLabel));
 
 			item.add(new Label("created", a.getCreated().toString()));
 			item.add(new Label("lastModified", a.getModified().toString()));

@@ -64,5 +64,10 @@ public class PlainLiteral extends AbstractModelPOJO {
 
 		return true;
 	}
+	
+	@Override
+	public int hashCode() {
+		return value.hashCode();
+	}
 
 }

@@ -8,9 +8,9 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.Response;
 
-import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
+import at.ait.dme.yuma4j.model.Annotation;
 import at.ait.dme.yuma4j.server.controller.AbstractController;
 
 @Path("/api/annotation")

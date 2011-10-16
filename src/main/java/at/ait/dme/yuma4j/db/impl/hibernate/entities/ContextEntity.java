@@ -2,7 +2,7 @@ package at.ait.dme.yuma4j.db.impl.hibernate.entities;
 
 import javax.persistence.Embeddable;
 
-import at.ait.dme.yuma4j.Context;
+import at.ait.dme.yuma4j.model.Context;
 
 @Embeddable
 public class ContextEntity {

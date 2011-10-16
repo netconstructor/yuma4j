@@ -14,12 +14,12 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.MediaType;
-import at.ait.dme.yuma4j.PlainLiteral;
-import at.ait.dme.yuma4j.Scope;
-import at.ait.dme.yuma4j.SemanticTag;
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.MediaType;
+import at.ait.dme.yuma4j.model.Scope;
+import at.ait.dme.yuma4j.model.tags.PlainLiteral;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 
 public class AnnotationTest {
 	

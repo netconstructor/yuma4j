@@ -3,12 +3,9 @@ package at.ait.dme.yuma4j.db;
 import java.util.List;
 import java.util.Map;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.AnnotationTree;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
-import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
-import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.model.Annotation;
 
 /**
  * Base class for annotation databases.

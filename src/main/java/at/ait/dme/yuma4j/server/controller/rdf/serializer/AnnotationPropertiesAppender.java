@@ -1,6 +1,6 @@
 package at.ait.dme.yuma4j.server.controller.rdf.serializer;
 
-import at.ait.dme.yuma4j.Annotation;
+import at.ait.dme.yuma4j.model.Annotation;
 
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.DC;

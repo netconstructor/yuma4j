@@ -16,8 +16,8 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 
-import at.ait.dme.yuma4j.PlainLiteral;
-import at.ait.dme.yuma4j.SemanticTag;
+import at.ait.dme.yuma4j.model.tags.PlainLiteral;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 
 /**
  * A JPA database entity wrapper for a {@link SemanticTag} object.

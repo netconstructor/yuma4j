@@ -1,10 +1,13 @@
-package at.ait.dme.yuma4j;
+package at.ait.dme.yuma4j.model;
 
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
 import org.codehaus.jackson.annotate.JsonIgnore;
+
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
+
 
 /**
  * The annotation.

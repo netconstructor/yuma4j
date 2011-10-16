@@ -1,4 +1,7 @@
-package at.ait.dme.yuma4j;
+package at.ait.dme.yuma4j.model.tags;
+
+import at.ait.dme.yuma4j.model.AbstractModelPOJO;
+
 
 /**
  * An RDF Plain Literal (see http://www.w3.org/TR/rdf-concepts/#dfn-plain-literal)

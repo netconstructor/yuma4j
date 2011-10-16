@@ -7,7 +7,7 @@ import com.hp.hpl.jena.rdf.model.ModelFactory;
 import com.hp.hpl.jena.rdf.model.Resource;
 import com.hp.hpl.jena.vocabulary.RDF;
 
-import at.ait.dme.yuma4j.Annotation;
+import at.ait.dme.yuma4j.model.Annotation;
 import at.ait.dme.yuma4j.server.URIBuilder;
 import at.ait.dme.yuma4j.server.controller.rdf.serializer.BodyPropertiesAppender;
 

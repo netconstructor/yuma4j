@@ -19,11 +19,11 @@ import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.MediaType;
-import at.ait.dme.yuma4j.Scope;
-import at.ait.dme.yuma4j.SemanticTag;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.MediaType;
+import at.ait.dme.yuma4j.model.Scope;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 
 /**
  * A JPA database entity wrapper for an {@link Annotation} object.

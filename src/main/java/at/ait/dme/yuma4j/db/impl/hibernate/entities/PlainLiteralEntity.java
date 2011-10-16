@@ -10,7 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
-import at.ait.dme.yuma4j.PlainLiteral;
+import at.ait.dme.yuma4j.model.tags.PlainLiteral;
 
 /**
  * A JPA database entity wrapper for the {@link PlainLiteral}.

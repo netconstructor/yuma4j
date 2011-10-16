@@ -15,12 +15,12 @@ import javax.persistence.Persistence;
 import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
 
-import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity;
+import at.ait.dme.yuma4j.model.Annotation;
 
 /**
  * DB implementation for relational databases using the

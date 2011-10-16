@@ -2,7 +2,7 @@ package at.ait.dme.yuma4j.db.impl.hibernate.entities;
 
 import javax.persistence.Embeddable;
 
-import at.ait.dme.yuma4j.User;
+import at.ait.dme.yuma4j.model.User;
 
 /**
  * A JPA database entity wrapper for the {@link User}.

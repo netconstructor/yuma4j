@@ -14,8 +14,8 @@ import org.apache.wicket.markup.html.link.ExternalLink;
 import org.apache.wicket.markup.html.list.ListItem;
 import org.apache.wicket.markup.html.list.ListView;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.SemanticTag;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 import at.ait.dme.yuma4j.server.URIBuilder;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.feeds.UserPage;

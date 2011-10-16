@@ -17,13 +17,13 @@ import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 import org.codehaus.jackson.map.ObjectMapper;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.User;
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.User;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 
 public class AbstractController {

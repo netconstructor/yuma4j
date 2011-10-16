@@ -4,7 +4,7 @@ import junit.framework.Assert;
 
 import org.junit.Test;
 
-import at.ait.dme.yuma4j.User;
+import at.ait.dme.yuma4j.model.User;
 
 public class UserTest {
 

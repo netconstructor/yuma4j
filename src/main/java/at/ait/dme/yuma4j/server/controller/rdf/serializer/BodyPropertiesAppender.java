@@ -2,8 +2,8 @@ package at.ait.dme.yuma4j.server.controller.rdf.serializer;
 
 import java.util.List;
 
-import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.SemanticTag;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 
 import com.hp.hpl.jena.rdf.model.Model;
 import com.hp.hpl.jena.rdf.model.Resource;

@@ -1,4 +1,4 @@
-package at.ait.dme.yuma4j;
+package at.ait.dme.yuma4j.model;
 
 /**
  * The visibility scope of the annotation (PUBLIC or PRIVATE).

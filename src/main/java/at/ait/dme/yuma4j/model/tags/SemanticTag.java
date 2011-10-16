@@ -1,8 +1,11 @@
-package at.ait.dme.yuma4j;
+package at.ait.dme.yuma4j.model.tags;
 
 import java.net.URI;
 import java.util.ArrayList;
 import java.util.List;
+
+import at.ait.dme.yuma4j.model.AbstractModelPOJO;
+
 
 /**
  * A 'Semantic Tag' which is part of an annotation. Semantic Tags

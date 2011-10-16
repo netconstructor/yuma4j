@@ -10,10 +10,10 @@ import org.apache.log4j.Logger;
 import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
-import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
 import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.model.Annotation;
 
 public class HibernateAnnotationStoreTest {
 	

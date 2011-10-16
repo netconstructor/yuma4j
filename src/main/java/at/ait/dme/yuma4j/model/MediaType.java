@@ -1,4 +1,4 @@
-package at.ait.dme.yuma4j;
+package at.ait.dme.yuma4j.model;
 
 /**
  * The media type of the annotation (IMAGE or SEADRAGON).

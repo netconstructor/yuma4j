@@ -5,9 +5,9 @@ import java.util.List;
 
 import org.apache.wicket.PageParameters;
 
-import at.ait.dme.yuma4j.Annotation;
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
+import at.ait.dme.yuma4j.model.Annotation;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
 import at.ait.dme.yuma4j.server.gui.BaseAnnotationListPage;
 import at.ait.dme.yuma4j.server.gui.WicketApplication;

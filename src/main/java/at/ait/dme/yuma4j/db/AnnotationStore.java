@@ -5,6 +5,7 @@ import java.util.Map;
 
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
 import at.ait.dme.yuma4j.model.Annotation;
 
 /**
@@ -52,111 +53,33 @@ public abstract class AnnotationStore {
 	 */
 	public abstract void shutdown();
 	
-	/**
-	 * Create a new annotation
-	 * @param annotation the annotation
-	 * @return the ID of the new annotation
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationModifiedException if the parent annotation was modified in the mean time
-	 */
 	public abstract String createAnnotation(Annotation annotation) 
-			throws AnnotationStoreException, AnnotationModifiedException;
+			throws AnnotationStoreException;
 
-	/**
-	 * Update an annotation
-	 * @param annotationID the ID of the annotation
-	 * @param annotation the annotation
-	 * @return the (new) annotation ID after the update (may change depending on store implementation)
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationNotFoundException if there is no annotation with the given ID
-	 * @throws AnnotationHasReplyException if this annotation has already been replied to
-	 */
-	public abstract String updateAnnotation(String annotationID, Annotation annotation)
-		throws AnnotationStoreException, AnnotationNotFoundException, AnnotationHasReplyException;
+	public abstract void updateAnnotation(String annotationID, Annotation annotation)
+		throws AnnotationStoreException, AnnotationNotFoundException;
 
-	/**
-	 * Delete an annotation
-	 * @param annotationID the annotation ID
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationNotFoundException if the annotation does not exist in the store
-	 * @throws AnnotationHasReplyException if this annotation has already been replied to
-	 */
 	public abstract void deleteAnnotation(String annotationID)
-		throws AnnotationStoreException, AnnotationNotFoundException, AnnotationHasReplyException;
+		throws AnnotationStoreException, AnnotationNotFoundException, DeleteNotAllowedException;
 
-	/**
-	 * Returns all annotations for a given object
-	 * @param objectURI the object URI
-	 * @return the annotation tree for the object
-	 * @throws AnnotationStoreException if anything goes wrong
-	 */
-	public abstract AnnotationTree listAnnotationsForObject(String objectURI)
+	public abstract List<Annotation> listAnnotationsForObject(String objectURI)
 		throws AnnotationStoreException;
 
-	/**
-	 * Returns the number of annotations for the given object
-	 * @param objectURI the object URI
-	 * @return the number of annotations for this object
-	 * @throws AnnotationStoreException if anything goes wrong
-	 */
 	public abstract long countAnnotationsForObject(String objectURI)
 		throws AnnotationStoreException; 
 		
-	/**
-	 * Returns the annotations for the given user
-	 * @param username the user name
-	 * @return the annotations
-	 * @throws AnnotationStoreException if anything goes wrong
-	 */
 	public abstract List<Annotation> listAnnotationsForUser(String username)
 		throws AnnotationStoreException;
 
-	/**
-	 * Retrieve an annotation by its ID
-	 * @param annotationID the annotation ID
-	 * @return the annotation
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationNotFoundException if the annotation was not found in the store
-	 */
 	public abstract Annotation getAnnotation(String annotationID)
 		throws AnnotationStoreException, AnnotationNotFoundException;
 	
-	/**
-	 * Returns the replies to the annotation with the specified ID
-	 * @param annotationID the annotation ID
-	 * @return the replies
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationNotFoundException if the annotation was not found in the store
-	 */
-	public abstract AnnotationTree listRepliesToAnnotation(String annotationID)
+	public abstract List<Annotation> listRepliesToAnnotation(String annotationID)
 		throws AnnotationStoreException, AnnotationNotFoundException;
 	
-	/**
-	 * Returns the number of replies to the annotation with the specified ID
-	 * @param annotationID the annotation ID
-	 * @return the number of replies
-	 * @throws AnnotationStoreException if anything goes wrong
-	 * @throws AnnotationNotFoundException if the annotation was not found in the store
-	 */
-	public abstract long countRepliesToAnnotation(String annotationID)
-		throws AnnotationStoreException, AnnotationNotFoundException;
-
-	/**
-	 * Retrieves the N most recent annotations from the store
-	 * @param n the number of annotations to retrieve
-	 * @param publicOnly if true, only annotations with public scope will be returned
-	 * @return the annotations
-	 * @throws AnnotationStoreException if anything goes wrong
-	 */
 	public abstract List<Annotation> getMostRecent(int n, boolean publicOnly)
 		throws AnnotationStoreException;
 
-	/**
-	 * Perform full-text search on the annotations in the store
-	 * @param query the search query
-	 * @return the result list
-	 * @throws AnnotationStoreException if anything goes wrong
-	 */
 	public abstract List<Annotation> findAnnotations(String query) 
 		throws AnnotationStoreException;
 	

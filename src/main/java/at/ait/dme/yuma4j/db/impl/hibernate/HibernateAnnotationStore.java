@@ -16,12 +16,10 @@ import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
 
 import at.ait.dme.yuma4j.Annotation;
-import at.ait.dme.yuma4j.AnnotationTree;
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
-import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
-import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity;
 
 /**
@@ -34,6 +32,9 @@ import at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity;
 public class HibernateAnnotationStore extends AnnotationStore {
 	
 	public static final String PARAM_PERSISTENCE_UNIT = "persistence.unit";
+	
+	private static final String EXCEPTION_ROOT_NOT_FOUND = "Annotation is a reply to an annotation that does not exist: ";
+	private static final String EXCEPTION_NOT_ROOT = "Annotation is a reply to an annotation that is not a root annotation: ";
 	
 	private static EntityManagerFactory emf;	
 	
@@ -66,28 +67,24 @@ public class HibernateAnnotationStore extends AnnotationStore {
 
 	@Override
 	public String createAnnotation(Annotation annotation)
-			throws AnnotationStoreException, AnnotationModifiedException {
+			throws AnnotationStoreException {
 
 		EntityTransaction tx = em.getTransaction();
 		try {			
 			tx.begin();
-			
-			// In case of a reply we have to ensure that the parent is unchanged
-			AnnotationEntity entity = new AnnotationEntity(annotation);
-			if (entity.getIsReplyTo() != null) {
-				// An annotation gets a new ID on every update. Therefore, checking for
-				// existence is sufficient here.			
-				AnnotationEntity parent = em.find(AnnotationEntity.class, entity.getParentID());				
-				if (parent == null) 
-					throw new AnnotationModifiedException(entity.getParentID());
 
-				// Parent unchanged - lock it and make sure it wasn't modified concurrently
-				try {
-					em.lock(parent, LockModeType.PESSIMISTIC_WRITE);
-				} catch(PessimisticLockException e) {
-					throw new AnnotationModifiedException(annotation.getParentID());
-				}				
-				em.refresh(parent);				
+			AnnotationEntity entity = new AnnotationEntity(annotation);
+			
+			// In case of a reply we have to ensure that root annotation 
+			// exists and is not a reply
+			if (annotation.getIsReplyTo() != null) {
+				AnnotationEntity root = em.find(AnnotationEntity.class, annotation.getIsReplyTo());				
+				
+				if (root == null)
+					throw new InvalidAnnotationException(EXCEPTION_ROOT_NOT_FOUND);
+				
+				if (root.getIsReplyTo() != null)
+					throw new InvalidAnnotationException(EXCEPTION_NOT_ROOT);
 			}
 
 			em.persist(entity);														
@@ -96,25 +93,24 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			String id = Long.toString(entity.getID());
 			annotation.setID(id);
 			return id;
-		} catch(AnnotationModifiedException e) {
+		} catch(InvalidAnnotationException e) {
 			throw e;
 		} catch(Throwable t) {
 			tx.rollback();
-			System.out.println("Failed to save annotation: " + t.getMessage());
 			throw new AnnotationStoreException(t);
 		}
 	}
 
 	@Override
 	public String updateAnnotation(String annotationID, Annotation annotation)
-			throws AnnotationStoreException, AnnotationNotFoundException, AnnotationHasReplyException {
+			throws AnnotationStoreException, AnnotationNotFoundException {
 
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
 			delete(annotationID);
 			AnnotationEntity entity = new AnnotationEntity(annotation);
-			em.persist(entity);
+			em..persist(entity);
 			tx.commit();
 			
 			String id = Long.toString(entity.getID());
@@ -174,7 +170,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	}
 
 	@Override
-	public AnnotationTree listAnnotationsForObject(String objectURI) throws AnnotationStoreException {
+	public List<Annotation> listAnnotationsForObject(String objectURI) throws AnnotationStoreException {
 		try {
 			Query query = em.createNamedQuery("annotationentity.find.for.object");
 			query.setParameter("objectURI", objectURI);
@@ -182,7 +178,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			@SuppressWarnings("unchecked")
 			List<AnnotationEntity> allAnnotations = query.getResultList();
 			
-			return new AnnotationTree(toAnnotations(allAnnotations));
+			return toAnnotations(allAnnotations);
 		} catch(Throwable t) {
 			throw new AnnotationStoreException(t);
 		}
@@ -235,7 +231,7 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	}
 	
 	@Override
-	public AnnotationTree listRepliesToAnnotation(String annotationId)
+	public List<Annotation> listThread(String annotationId)
 		throws AnnotationStoreException, AnnotationNotFoundException {
 		
 		try {
@@ -252,23 +248,10 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			
 			@SuppressWarnings("unchecked")
 			List<AnnotationEntity> thread = query.getResultList();		
-			return new AnnotationTree(toAnnotations(filterReplies(thread, annotationId)));
+			return toAnnotations(filterReplies(thread, annotationId));
 		} catch (Throwable t) {
 			throw new AnnotationStoreException(t);
 		}
-	}
-
-	@Override
-	public long countRepliesToAnnotation(String annotationId) throws AnnotationStoreException {
-		int count = 0;
-		try {
-			Query query = em.createNamedQuery("annotationentity.count.replies");
-			query.setParameter("id", Long.parseLong(annotationId));
-			count = ((Long) query.getSingleResult()).intValue();
-		} catch (Throwable t) {
-			throw new AnnotationStoreException(t);
-		}
-		return count;
 	}
 
 	@Override

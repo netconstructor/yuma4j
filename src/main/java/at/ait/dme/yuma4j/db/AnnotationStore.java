@@ -6,6 +6,7 @@ import java.util.Map;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
+import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.model.Annotation;
 
 /**
@@ -53,11 +54,11 @@ public abstract class AnnotationStore {
 	 */
 	public abstract void shutdown();
 	
-	public abstract String createAnnotation(Annotation annotation) 
-			throws AnnotationStoreException;
+	public abstract Annotation createAnnotation(Annotation annotation) 
+			throws AnnotationStoreException, InvalidAnnotationException;
 
-	public abstract void updateAnnotation(String annotationID, Annotation annotation)
-		throws AnnotationStoreException, AnnotationNotFoundException;
+	public abstract Annotation updateAnnotation(String annotationID, Annotation annotation)
+		throws AnnotationStoreException, AnnotationNotFoundException, InvalidAnnotationException;
 
 	public abstract void deleteAnnotation(String annotationID)
 		throws AnnotationStoreException, AnnotationNotFoundException, DeleteNotAllowedException;
@@ -70,11 +71,14 @@ public abstract class AnnotationStore {
 		
 	public abstract List<Annotation> listAnnotationsForUser(String username)
 		throws AnnotationStoreException;
+	
+	public abstract long countAnnotationsForUser(String username)
+		throws AnnotationStoreException; 
 
 	public abstract Annotation getAnnotation(String annotationID)
 		throws AnnotationStoreException, AnnotationNotFoundException;
 	
-	public abstract List<Annotation> listRepliesToAnnotation(String annotationID)
+	public abstract List<Annotation> getReplyThread(String annotationID)
 		throws AnnotationStoreException, AnnotationNotFoundException;
 	
 	public abstract List<Annotation> getMostRecent(int n, boolean publicOnly)

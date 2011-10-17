@@ -12,10 +12,10 @@ import org.codehaus.jackson.JsonGenerationException;
 import org.codehaus.jackson.JsonParseException;
 import org.codehaus.jackson.map.JsonMappingException;
 
-import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
-import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
+import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
+import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.model.Annotation;
 import at.ait.dme.yuma4j.server.controller.AbstractController;
 
@@ -45,8 +45,8 @@ public class JsonPController extends AbstractController {
 	@GET
 	@Path("/create")
 	public Response createAnnotation(@QueryParam("json") String json, @QueryParam("callback") String callback)
-			throws AnnotationStoreException, JsonParseException, JsonMappingException, AnnotationModifiedException,
-			IOException, AnnotationHasReplyException, AnnotationNotFoundException {
+			throws AnnotationStoreException, JsonParseException, JsonMappingException,
+			IOException, AnnotationNotFoundException, InvalidAnnotationException {
 
 		String jsonp;
 		Annotation a = jsonMapper.readValue(json, Annotation.class);
@@ -66,7 +66,7 @@ public class JsonPController extends AbstractController {
 	@GET
 	@Path("/delete")
 	public Response deleteAnnotation(@QueryParam("id") String id, @QueryParam("callback") String callback)
-			throws UnsupportedEncodingException, AnnotationStoreException, AnnotationHasReplyException, AnnotationNotFoundException {
+			throws UnsupportedEncodingException, AnnotationStoreException, AnnotationNotFoundException, DeleteNotAllowedException {
 		
 		log.info(servletRequest.getRemoteAddr() + LOG_DELETE + id);
 		

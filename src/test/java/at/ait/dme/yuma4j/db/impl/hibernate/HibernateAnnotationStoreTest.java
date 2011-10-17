@@ -11,8 +11,8 @@ import org.codehaus.jackson.map.ObjectMapper;
 import org.junit.Test;
 
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
-import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
 import at.ait.dme.yuma4j.model.Annotation;
 
 public class HibernateAnnotationStoreTest {
@@ -33,36 +33,40 @@ public class HibernateAnnotationStoreTest {
 		
 		// Create
 		Annotation before = jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class);
-		String id = db.createAnnotation(before);
+		Annotation created = db.createAnnotation(before);
+		Assert.assertNotNull(created);
+		String id = created.getID();
 		log.info("Created annotation with ID " + id);
-		Assert.assertNotNull(id);
-		Assert.assertEquals(id, before.getID());
+		Assert.assertEquals(before, created);
 		
 		// Read
-		Annotation annotation = db.getAnnotation(id);
-		Assert.assertNotNull(annotation);
-		Assert.assertEquals(before, annotation);
+		Annotation read = db.getAnnotation(id);
+		Assert.assertNotNull(read);
+		Assert.assertEquals(before, read);
 		
 		// Update
 		Annotation after = jsonMapper.readValue(JsonTestData.ANNOTATION_UPDATE, Annotation.class);
-		id = db.updateAnnotation(id, after);
-		log.info("Annotation updated, new ID " + id);
-		Assert.assertNotNull(id);
-		Assert.assertFalse(before.equals(after));
-		Assert.assertEquals(id, after.getID());
+		Annotation updated = db.updateAnnotation(id, after);
+		Assert.assertNotNull(updated);
+		Assert.assertEquals(after.getModified(), updated.getModified());
+		Assert.assertEquals(after.getText(), updated.getText());
+		Assert.assertEquals(after.getFragment(), updated.getFragment());
+		Assert.assertEquals(after.getTags(), updated.getTags());
+		Assert.assertEquals(id, updated.getID());
 		
 		// Create reply
-		Annotation reply = jsonMapper.readValue(JsonTestData.reply(id, id), Annotation.class);
-		String replyID = db.createAnnotation(reply);
-		log.info("Created reply to " + id + ", reply ID " + replyID);
+		Annotation reply = jsonMapper.readValue(JsonTestData.reply(id), Annotation.class);
+		reply = db.createAnnotation(reply);
+		Assert.assertNotNull(reply);
+		String replyID = reply.getID();
 		Assert.assertNotNull(replyID);
-		Assert.assertEquals(replyID, reply.getID());
+		log.info("Created reply to " + id + ", reply ID " + reply.getID());
 		
 		// Search
 		List<Annotation> annotations = db.findAnnotations("SUSPENSION BRIDGE");
 		log.info("Testing keyword search");
 		Assert.assertEquals(1, annotations.size());
-		Assert.assertEquals(after, annotations.get(0));
+		Assert.assertEquals(updated, annotations.get(0));
 		
 		// Count
 		long count = db.countAnnotationsForObject(IMAGE_URI);
@@ -73,7 +77,7 @@ public class HibernateAnnotationStoreTest {
 		try {
 			db.deleteAnnotation(id);
 			Assert.fail("Annotation has reply - delete should fail!");
-		} catch (AnnotationHasReplyException e) {
+		} catch (DeleteNotAllowedException e) {
 			log.info("Deleting annotation " + id + " failed as expected");
 		}
 		

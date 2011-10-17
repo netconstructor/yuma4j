@@ -52,7 +52,7 @@ public class ObjectPage extends BaseAnnotationListPage {
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
-			return db.listAnnotationsForObject(objectId).asFlatList();
+			return db.listAnnotationsForObject(objectId);
 		} catch (AnnotationStoreException e) {
 			logger.fatal(e.getMessage());
 		} finally {

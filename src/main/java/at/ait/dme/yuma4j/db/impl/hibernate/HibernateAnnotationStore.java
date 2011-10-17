@@ -12,15 +12,17 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.LockModeType;
 import javax.persistence.Persistence;
-import javax.persistence.PessimisticLockException;
 import javax.persistence.Query;
 
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
 import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity;
+import at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity;
 import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.model.tags.SemanticTag;
 
 /**
  * DB implementation for relational databases using the
@@ -34,7 +36,9 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	public static final String PARAM_PERSISTENCE_UNIT = "persistence.unit";
 	
 	private static final String EXCEPTION_ROOT_NOT_FOUND = "Annotation is a reply to an annotation that does not exist: ";
-	private static final String EXCEPTION_NOT_ROOT = "Annotation is a reply to an annotation that is not a root annotation: ";
+	private static final String EXCEPTION_NOT_ROOT = "Cannot reply to an annotation that is a reply itself: ";
+	private static final String EXCEPTION_HIJACK_ATTEMPT = "Update attempt made by a different user - may be a hijacking attempt: ";
+	private static final String EXCEPTION_INVALID_PROPERTY_UPDATE = "Update attempted on a property that should never change: ";
 	
 	private static EntityManagerFactory emf;	
 	
@@ -66,64 +70,103 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	}
 
 	@Override
-	public String createAnnotation(Annotation annotation)
-			throws AnnotationStoreException {
+	public Annotation createAnnotation(Annotation annotation)
+			throws AnnotationStoreException, InvalidAnnotationException {
 
 		EntityTransaction tx = em.getTransaction();
 		try {			
 			tx.begin();
-
 			AnnotationEntity entity = new AnnotationEntity(annotation);
 			
-			// In case of a reply we have to ensure that root annotation 
-			// exists and is not a reply
+			// If this annotation is a reply, we have to make sure that the root
+			// annotation (a) exists and (b) is indeed a root annotation, not a reply itself
 			if (annotation.getIsReplyTo() != null) {
-				AnnotationEntity root = em.find(AnnotationEntity.class, annotation.getIsReplyTo());				
+				Long rootID = Long.parseLong(annotation.getIsReplyTo());
+				AnnotationEntity root = em.find(AnnotationEntity.class, rootID);				
 				
 				if (root == null)
-					throw new InvalidAnnotationException(EXCEPTION_ROOT_NOT_FOUND);
+					throw new InvalidAnnotationException(EXCEPTION_ROOT_NOT_FOUND + annotation.getIsReplyTo());
 				
 				if (root.getIsReplyTo() != null)
-					throw new InvalidAnnotationException(EXCEPTION_NOT_ROOT);
+					throw new InvalidAnnotationException(EXCEPTION_NOT_ROOT + annotation.getIsReplyTo());
 			}
 
 			em.persist(entity);														
 			tx.commit();
-			
-			String id = Long.toString(entity.getID());
-			annotation.setID(id);
-			return id;
-		} catch(InvalidAnnotationException e) {
-			throw e;
+
+			annotation.setID(Long.toString(entity.getID()));
+			return annotation;
 		} catch(Throwable t) {
 			tx.rollback();
+			
+			if (t instanceof InvalidAnnotationException)
+				throw (InvalidAnnotationException) t;
+			
 			throw new AnnotationStoreException(t);
 		}
 	}
 
 	@Override
-	public String updateAnnotation(String annotationID, Annotation annotation)
-			throws AnnotationStoreException, AnnotationNotFoundException {
+	public Annotation updateAnnotation(String annotationID, Annotation update)
+			throws AnnotationStoreException, AnnotationNotFoundException, InvalidAnnotationException {
 
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-			delete(annotationID);
-			AnnotationEntity entity = new AnnotationEntity(annotation);
-			em..persist(entity);
-			tx.commit();
+			Long id = Long.parseLong(annotationID);
+			AnnotationEntity original = em.find(AnnotationEntity.class, id);
+			if (original == null)
+				throw new AnnotationNotFoundException();
 			
-			String id = Long.toString(entity.getID());
-			annotation.setID(id);
-			return id;	
+			// Verify 'unchangeable' properties
+			if (!original.getCreator().toUser().equals(update.getCreator()))
+				throw new InvalidAnnotationException(EXCEPTION_HIJACK_ATTEMPT + update.getCreator());
+			
+			if (!original.getObjectURI().equals(update.getObjectURI()))
+				throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "objectURI");
+			
+			if (!original.getContext().toContext().equals(update.getContext()))
+				throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "context");
+			
+			if (original.getCreated().getTime() != update.getCreated().getTime())
+				throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "created");
+			
+			if (!original.getMediatype().equals(update.getMediatype()))
+				throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "mediatype");
+				
+			if (original.getIsReplyTo() == null) {
+				if (update.getIsReplyTo() != null) 
+					throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "isReplyTo");
+			} else {
+				if (!original.getIsReplyTo().toString().equals(update.getIsReplyTo()))
+					throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "isReplyTo");
+				
+				if (update.getFragment() != null)
+					throw new InvalidAnnotationException(EXCEPTION_INVALID_PROPERTY_UPDATE + "fragment");
+			}
+			
+			// Update changeable properties
+			original.setModified(update.getModified());
+			original.setText(update.getText());
+			original.setFragment(update.getFragment());
+			original.setScope(update.getScope());
+
+			List<SemanticTagEntity> tagEntities = new ArrayList<SemanticTagEntity>();
+			for (SemanticTag t : update.getTags()) {
+				tagEntities.add(new SemanticTagEntity(original, t));
+			}
+			original.setTags(tagEntities);
+			
+			tx.commit();
+			return original.toAnnotation();
 		} catch (Throwable t) {
 			tx.rollback();
 			
 			if (t instanceof AnnotationNotFoundException)
 				throw (AnnotationNotFoundException) t;
 			
-			if (t instanceof AnnotationHasReplyException)
-				throw (AnnotationHasReplyException) t;
+			if (t instanceof InvalidAnnotationException)
+				throw (InvalidAnnotationException) t;
 			
 			throw new AnnotationStoreException(t);
 		}
@@ -131,12 +174,27 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	
 	@Override
 	public void deleteAnnotation(String annotationID)
-			throws AnnotationStoreException, AnnotationNotFoundException, AnnotationHasReplyException {
+			throws AnnotationStoreException, AnnotationNotFoundException, DeleteNotAllowedException {
 
 		EntityTransaction tx = em.getTransaction();
 		try {
 			tx.begin();
-			delete(annotationID);
+			Long id = Long.parseLong(annotationID);
+			AnnotationEntity entity = em.find(AnnotationEntity.class, id);
+			if (entity == null)
+				throw new AnnotationNotFoundException();
+			
+			if (entity.getIsReplyTo() == null) {
+				// If this is a root annotation, make sure no-one has replied
+				// in the mean time
+				em.lock(entity, LockModeType.PESSIMISTIC_WRITE);			
+				em.refresh(entity);
+				
+				if (getReplyThread(annotationID).size() > 0)
+					throw new DeleteNotAllowedException();
+			}
+			
+			em.remove(entity);	
 			tx.commit();
 		} catch (Throwable t) {
 			tx.rollback();
@@ -144,29 +202,11 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			if (t instanceof AnnotationNotFoundException)
 				throw (AnnotationNotFoundException) t;
 			
-			if (t instanceof AnnotationHasReplyException)
-				throw (AnnotationHasReplyException) t;
+			if (t instanceof DeleteNotAllowedException)
+				throw (DeleteNotAllowedException) t;
 			
 			throw new AnnotationStoreException(t);
 		}
-	}
-	
-	private void delete(String annotationID)
-		throws AnnotationNotFoundException, AnnotationStoreException, AnnotationHasReplyException {
-		
-		Long id = Long.parseLong(annotationID);
-	
-		AnnotationEntity entity = em.find(AnnotationEntity.class, id);
-		if (entity == null)
-			throw new AnnotationNotFoundException();
-		
-		em.lock(entity, LockModeType.PESSIMISTIC_WRITE);			
-		em.refresh(entity);
-		
-		if (countRepliesToAnnotation(annotationID) > 0)
-			throw new AnnotationHasReplyException();
-		
-		em.remove(entity);	
 	}
 
 	@Override
@@ -213,6 +253,19 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	}	
 	
 	@Override
+	public long countAnnotationsForUser(String username) throws AnnotationStoreException {
+		int count = 0;
+		try {
+			Query query = em.createNamedQuery("annotationentity.count.for.user");
+			query.setParameter("username", username);
+			count = ((Long) query.getSingleResult()).intValue();
+		} catch(Throwable t) {
+			throw new AnnotationStoreException(t);
+		}
+		return count;
+	}
+	
+	@Override
 	public Annotation getAnnotation(String annotationID) 
 		throws AnnotationStoreException, AnnotationNotFoundException {
 
@@ -231,24 +284,24 @@ public class HibernateAnnotationStore extends AnnotationStore {
 	}
 	
 	@Override
-	public List<Annotation> listThread(String annotationId)
+	public List<Annotation> getReplyThread(String annotationId)
 		throws AnnotationStoreException, AnnotationNotFoundException {
 		
 		try {
 			Annotation a = getAnnotation(annotationId);
-			String rootId;
-			if (a.getRootID() == null) {
-				rootId = a.getID();
+			String isReplyTo;
+			if (a.getIsReplyTo() == null) {
+				isReplyTo = a.getID();
 			} else {
-				rootId = a.getRootID();
+				isReplyTo = a.getIsReplyTo();
 			}
 			
 			Query query = em.createNamedQuery("annotationentity.find.thread");	
-			query.setParameter("rootID", Long.parseLong(rootId));
+			query.setParameter("isReplyTo", Long.parseLong(isReplyTo));
 			
 			@SuppressWarnings("unchecked")
 			List<AnnotationEntity> thread = query.getResultList();		
-			return toAnnotations(filterReplies(thread, annotationId));
+			return toAnnotations(thread);
 		} catch (Throwable t) {
 			throw new AnnotationStoreException(t);
 		}
@@ -297,28 +350,6 @@ public class HibernateAnnotationStore extends AnnotationStore {
 			return toAnnotations(entities);
 		} catch(Throwable t) {
 			throw new AnnotationStoreException(t);
-		}
-	}
-	
-	/**
-	* Filters an entire annotation thread so that only (direct or indirect)
-	* children of the annotation with the specified ID are returned.
-	* @param thread the entire annotation thread
-	* @param parentId the ID of the parent
-	* @return the filtered thread
-	*/
-	private List<AnnotationEntity> filterReplies(List<AnnotationEntity> thread, String parentId) {
-		List<AnnotationEntity> replies = new ArrayList<AnnotationEntity>();
-		getChildren(thread, replies, Long.parseLong(parentId));
-		return replies;
-	}
-
-	private void getChildren(List<AnnotationEntity> all, List<AnnotationEntity> children, Long parentId) {
-		for (AnnotationEntity a : all) {
-			if (a.getParentID().equals(parentId)) {
-				children.add(a);
-				getChildren(all, children, a.getID());
-			}
 		}
 	}
 	

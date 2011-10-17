@@ -62,7 +62,7 @@ public class RepliesPage extends BaseAnnotationListPage {
 		try {
 			db = config.getAnnotationStore();
 			db.connect();
-			return db.listRepliesToAnnotation(id).asFlatList();
+			return db.getReplyThread(id);
 		} catch (AnnotationStoreException e) {
 			logger.fatal(e.getMessage());
 		} catch (AnnotationNotFoundException e) {

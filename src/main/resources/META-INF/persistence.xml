@@ -4,9 +4,10 @@
 	<!--  
     <persistence-unit name="production">   
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity</class>
-    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.ContextEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity</class>
-		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
+		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
@@ -22,9 +23,10 @@
 
 	<persistence-unit name="production">   
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity</class>
-    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.ContextEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity</class>
-		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
+		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>
@@ -40,9 +42,10 @@
 	
 	<persistence-unit name="test">   
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.AnnotationEntity</class>
-    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.ContextEntity</class>
+    	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
     	<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.SemanticTagEntity</class>
-		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.UserEntity</class>
+		<class>at.ait.dme.yuma4j.db.impl.hibernate.entities.PlainLiteralEntity</class>
     	<exclude-unlisted-classes>true</exclude-unlisted-classes>
 		<properties>
 	        <property name="javax.persistence.provider" value="org.hibernate.ejb.HibernatePersistence"/>

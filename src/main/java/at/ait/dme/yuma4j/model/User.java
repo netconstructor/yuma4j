@@ -11,9 +11,14 @@ public class User extends AbstractModelPOJO {
 	private static final long serialVersionUID = 6615570115330996726L;
 
 	/**
-	 * The user screen name (MANDATORY)
+	 * The (unique) username (MANDATORY)
 	 */
 	private String username = null;
+	
+	/**
+	 * The user's 'real name' (OPTIONAL)
+	 */
+	private String name = null;
 	
 	/**
 	 * The user's Gravatar hash (OPTIONAL) 
@@ -39,6 +44,14 @@ public class User extends AbstractModelPOJO {
 	// Required for JSON mapping
 	void setUsername(String username) {
 		this.username = username;
+	}
+	
+	public String getName() {
+		return name;
+	}
+	
+	public void setName(String name) {
+		this.name = name;
 	}
 
 	public String getGravatarHash() {
@@ -67,6 +80,9 @@ public class User extends AbstractModelPOJO {
 		if (!this.username.equals(user.username))
 			return false;
 		
+		if (!equalsNullable(this.name, user.name))
+			return false;
+		
 		if (!equalsNullable(this.uri, user.uri))
 			return false;
 		
@@ -79,6 +95,11 @@ public class User extends AbstractModelPOJO {
 	@Override
 	public int hashCode() {
 		return this.username.hashCode();
+	}
+	
+	@Override
+	public String toString() {
+		return username;
 	}
 
 }

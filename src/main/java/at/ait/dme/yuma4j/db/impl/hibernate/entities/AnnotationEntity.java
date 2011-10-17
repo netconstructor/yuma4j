@@ -32,38 +32,38 @@ import at.ait.dme.yuma4j.model.tags.SemanticTag;
  */
 @Entity
 @NamedQueries({
-	@NamedQuery(name = "annotationentity.find.thread",
-	query = "from AnnotationEntity a where a.rootID = :rootID"),
-
 	@NamedQuery(name = "annotationentity.find.for.object",
-	query = "from AnnotationEntity a where a.objectURI = :objectURI"),
-
-	@NamedQuery(name = "annotationentity.find.for.user",
-	query = "from AnnotationEntity a where a.creator.username = :username"),
+		query = "from AnnotationEntity a where a.objectURI = :objectURI"),
 
 	@NamedQuery(name = "annotationentity.count.for.object",
-	query = "select count(*) from AnnotationEntity a where a.objectURI = :objectURI"),
+		query = "select count(*) from AnnotationEntity a where a.objectURI = :objectURI"),
 
-	@NamedQuery(name = "annotationentity.count.replies",
-	query = "select count(*) from AnnotationEntity a where a.parentID = :id"),
+	@NamedQuery(name = "annotationentity.find.for.user",
+		query = "from AnnotationEntity a where a.creator.username = :username"),
+			
+	@NamedQuery(name = "annotationentity.count.for.user",
+		query = "select count(*) from AnnotationEntity a where a.creator.username = :username"),
+					
+	@NamedQuery(name = "annotationentity.find.thread",
+		query = "from AnnotationEntity a where a.isReplyTo = :isReplyTo"),
 
 	@NamedQuery(name = "annotationentity.mostrecent.public",
-	query = "from AnnotationEntity a where a.scope = 'PUBLIC' order by a.modified desc"),
+		query = "from AnnotationEntity a where a.scope = 'PUBLIC' order by a.modified desc"),
 
 	@NamedQuery(name = "annotationentity.mostrecent.all",
-	query = "from AnnotationEntity a order by a.modified desc"),
+		query = "from AnnotationEntity a order by a.modified desc"),
 
 	@NamedQuery(name = "annotationentity.searchText",
-	query = "from AnnotationEntity a where lower(a.text) like concat('%',:term,'%'))"),
+		query = "from AnnotationEntity a where lower(a.text) like concat('%',:term,'%'))"),
 
 	@NamedQuery(name = "annotationentity.searchTextAndTags",
-	query = "select a from AnnotationEntity a " +
-	" left join a.tags as tag " +
-	" left join tag.labels as label " +
-	"where (" +
-	" (lower(a.text) like concat('%',:term,'%')) or " +
-	" (lower(label.value) like concat('%',lower(:term),'%')) " +
-	") ")
+		query = "select a from AnnotationEntity a " +
+				" left join a.tags as tag " +
+				" left join tag.labels as label " +
+				"where (" +
+				" (lower(a.text) like concat('%',:term,'%')) or " +
+				" (lower(label.value) like concat('%',lower(:term),'%')) " +
+				") ")
 })
 @Table(name = "annotations")
 public class AnnotationEntity implements Serializable {
@@ -164,6 +164,14 @@ public class AnnotationEntity implements Serializable {
 
 	public String getObjectURI() {
 		return objectURI;
+	}
+	
+	public void setContext(ContextEntity context) {
+		this.context = context;
+	}
+	
+	public ContextEntity getContext() {
+		return context;
 	}
 	
 	public void setCreator(UserEntity creator) {

@@ -12,7 +12,7 @@ public class JsonTestData {
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 	
 	public static final String ANNOTATION_UPDATE =
@@ -28,7 +28,7 @@ public class JsonTestData {
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , " +
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\" , " +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" } , " +
 		  "\"tags\" : [" +
 		     "{ \"uri\" : \"http://rdf.freebase.com/rdf/lisbon\" , \"labels\":[{ \"lang\" : \"en\" , \"value\" : \"Lisbon\"}] }" +
 		  "]}";
@@ -39,10 +39,10 @@ public class JsonTestData {
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 	
-	public static final String INVALID_ANNOTATION_NO_CONTEXT_URI =
+	public static final String INVALID_ANNOTATION_NO_CONTEXT =
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , " +
           "\"creator\" :  { \"username\" : \"guest\" } , " +
@@ -57,7 +57,7 @@ public class JsonTestData {
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 	
 	public static final String INVALID_ANNOTATION_NO_CREATED =
@@ -66,7 +66,7 @@ public class JsonTestData {
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 	
 	public static final String INVALID_ANNOTATION_NO_MODIFIED =
@@ -75,7 +75,7 @@ public class JsonTestData {
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 	
 	public static final String INVALID_ANNOTATION_NO_MEDIATYPE =
@@ -84,25 +84,22 @@ public class JsonTestData {
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
 		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 
 	private static final String ANNOTATION_REPLY =
-		"{ \"parentID\" : \"@parent@\" , " +
-		  "\"rootID\" : \"@root@\" , " +
+		"{ \"isReplyTo\" : \"@root@\" , " +
           "\"text\" : \"Interesting!\" , " +
           "\"modified\" : 1224043200000 , " +
           "\"created\" : 1224043200000 , " +
           "\"creator\" : { \"username\" : \"rsimon\" } , " +
           "\"mediatype\" : \"IMAGE\" , " +
           "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
-		  "\"contextURI\" : \"http://dme.ait.ac.at/object/lissabon.html\"" +
+		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
 
-	public static String reply(String root, String parent) {
-		return ANNOTATION_REPLY
-			.replace("@root@", root)
-			.replace("@parent@", parent);
+	public static String reply(String root) {
+		return ANNOTATION_REPLY.replace("@root@", root);
 	}
 	
 }

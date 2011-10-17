@@ -117,7 +117,7 @@ public class JSONControllerTest {
 		root2 = root2.substring(root2.lastIndexOf("/") + 1);
 		
 		// reply #1
-		StringEntity replyEntity = new  StringEntity(JsonTestData.reply(root1, root1), ENCODING);
+		StringEntity replyEntity = new  StringEntity(JsonTestData.reply(root1), ENCODING);
 		replyEntity.setContentType(CONTENT_TYPE_JSON);
 		createMethod = new HttpPost(JSON_CONTROLLER_BASE_URL);		
 		createMethod.setEntity(replyEntity);			

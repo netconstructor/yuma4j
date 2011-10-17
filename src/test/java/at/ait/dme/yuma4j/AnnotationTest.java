@@ -67,7 +67,7 @@ public class AnnotationTest {
 		Annotation a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_OBJECT_URI, Annotation.class);
 		Assert.assertFalse(a.isValid());
 		
-		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CONTEXT_URI, Annotation.class);
+		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CONTEXT, Annotation.class);
 		Assert.assertFalse(a.isValid());
 
 		a = jsonMapper.readValue(JsonTestData.INVALID_ANNOTATION_NO_CREATOR, Annotation.class);

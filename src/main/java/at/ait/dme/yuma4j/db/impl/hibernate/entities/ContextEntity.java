@@ -7,35 +7,35 @@ import at.ait.dme.yuma4j.model.Context;
 @Embeddable
 public class ContextEntity {
 	
-	private String uri;
+	private String contextURI;
 	
-	private String title = null;
+	private String contextTitle = null;
 	
 	public ContextEntity() { }
 	
 	public ContextEntity(Context context) {
-		this.uri = context.getUri();
-		this.title = context.getTitle();
+		this.contextURI = context.getUri();
+		this.contextTitle = context.getTitle();
 	}
 	
 	public Context toContext() {
-		return new Context(uri, title);
+		return new Context(contextURI, contextTitle);
 	}
 
 	public void setURI(String uri) {
-		this.uri = uri;
+		this.contextURI = uri;
 	}
 	
 	public String getURI() {
-		return uri;
+		return contextURI;
 	}
 	
 	public void setTitle(String title) {
-		this.title = title;
+		this.contextTitle = title;
 	}
 	
 	public String getTitle() {
-		return title;
+		return contextTitle;
 	}
 	
 }

@@ -19,9 +19,9 @@ import org.codehaus.jackson.map.ObjectMapper;
 
 import at.ait.dme.yuma4j.db.AnnotationStore;
 import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
-import at.ait.dme.yuma4j.db.exception.AnnotationHasReplyException;
-import at.ait.dme.yuma4j.db.exception.AnnotationModifiedException;
 import at.ait.dme.yuma4j.db.exception.AnnotationNotFoundException;
+import at.ait.dme.yuma4j.db.exception.DeleteNotAllowedException;
+import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
 import at.ait.dme.yuma4j.model.Annotation;
 import at.ait.dme.yuma4j.model.User;
 import at.ait.dme.yuma4j.server.config.ServerConfig;
@@ -46,12 +46,12 @@ public class AbstractController {
     
 	protected List<Annotation> _listAnnotations(String objectURI) throws AnnotationStoreException {
 		AnnotationStore db = null;
-		List<Annotation> tree = null;
+		List<Annotation> annotations = null;
 		
 		try {
 			db = getConfig().getAnnotationStore();
 			db.connect();
-			tree = db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING)).asFlatList();
+			annotations = db.listAnnotationsForObject(URLDecoder.decode(objectURI, URL_ENCODING));
 		} catch (IOException e) {
 			// Should never happen
 			throw new RuntimeException(e);		
@@ -59,7 +59,7 @@ public class AbstractController {
 			if(db != null) db.disconnect();
 		}
 
-		return tree;
+		return annotations;
 	}
 	
 	protected Annotation _getAnnotation(@PathParam("id") String annotationId)
@@ -83,7 +83,7 @@ public class AbstractController {
 	}
 
 	protected Annotation _createAnnotation(Annotation annotation) throws AnnotationStoreException,
-		JsonParseException, JsonMappingException, AnnotationModifiedException, IOException {
+		JsonParseException, JsonMappingException, IOException, InvalidAnnotationException {
 		
 		AnnotationStore db = null;
 				
@@ -110,7 +110,7 @@ public class AbstractController {
 	}
 	
 	protected Annotation _updateAnnotation(Annotation annotation) throws AnnotationStoreException,
-		AnnotationHasReplyException, AnnotationNotFoundException, UnsupportedEncodingException {
+		AnnotationNotFoundException, UnsupportedEncodingException, InvalidAnnotationException {
 		
 		AnnotationStore db = null;
 		try {
@@ -136,7 +136,7 @@ public class AbstractController {
 	}
 	
 	protected void _deleteAnnotation(@PathParam("id") String annotationId)
-		throws AnnotationStoreException, AnnotationHasReplyException, UnsupportedEncodingException, AnnotationNotFoundException {
+		throws AnnotationStoreException, UnsupportedEncodingException, AnnotationNotFoundException, DeleteNotAllowedException {
 		
 		AnnotationStore db = null;
 		try {			

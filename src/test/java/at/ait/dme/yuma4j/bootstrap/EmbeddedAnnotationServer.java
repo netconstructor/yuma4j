@@ -1,13 +1,24 @@
 package at.ait.dme.yuma4j.bootstrap;
 
+import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.codehaus.jackson.JsonParseException;
+import org.codehaus.jackson.map.JsonMappingException;
+import org.codehaus.jackson.map.ObjectMapper;
 import org.jboss.resteasy.logging.Logger;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
 import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
+
+import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
+import at.ait.dme.yuma4j.db.AnnotationStore;
+import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
+import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
+import at.ait.dme.yuma4j.model.Annotation;
+import at.ait.dme.yuma4j.server.config.ServerConfig;
 
 public class EmbeddedAnnotationServer {
 	
@@ -21,6 +32,11 @@ public class EmbeddedAnnotationServer {
 
 	public static void main(String[] args) throws Exception {
 		start(null);
+		
+		if (args.length > 0) {
+			if (args[0].toLowerCase().equals("-testdata"))
+				insertTestData();
+		}
 	}
 	
 	public static String getApplicationURL() {
@@ -53,6 +69,19 @@ public class EmbeddedAnnotationServer {
 			server.start();
 			log.info("Annotation Server available at " + getApplicationURL());
 		}
+	}
+	
+	private static void insertTestData() throws AnnotationStoreException,
+		JsonParseException, JsonMappingException, InvalidAnnotationException, IOException {
+		
+		AnnotationStore db = ServerConfig.getInstance(null).getAnnotationStore();
+		
+		ObjectMapper jsonMapper = new ObjectMapper();
+		db.connect();
+		db.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class));
+		db.disconnect();
+		
+		log.info("Inserted testdata: " + JsonTestData.ANNOTATION);
 	}
 	
 	public static void stop() throws Exception {

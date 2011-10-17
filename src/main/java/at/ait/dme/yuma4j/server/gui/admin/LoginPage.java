@@ -26,13 +26,13 @@ public class LoginPage extends WebPage {
 	}
 	
 	private void checkForOpenIdLogin() {
-		if (returnsFromOpenIdAuthentication()) {
+		if (returnsFromOpenIdAuthentification()) {
 			YUMAWebSession session = (YUMAWebSession) AuthenticatedWebSession.get(); 
 			signInAndRedirectToHomePage(session);
 		}
 	}
 	
-	private boolean returnsFromOpenIdAuthentication() {
+	private boolean returnsFromOpenIdAuthentification() {
 		if (pageParams != null && !pageParams.isEmpty()) {
 			String isReturn = pageParams.getString("is_return");
 		     return isReturn != null && isReturn.equals("true");

@@ -26,7 +26,8 @@ class OpenIdSignInPanel extends Panel {
 				openIdAuthenticator.performAuthentication(openId.getInput());
 			} 
 			catch (Exception e) {
-				System.out.println("blabla");
+				// TODO: integrate with wicket form feedback mechanism
+				System.out.println("login failed");
 			}
 		}
 	}

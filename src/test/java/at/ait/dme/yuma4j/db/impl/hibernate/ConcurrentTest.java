@@ -44,13 +44,13 @@ public class ConcurrentTest {
 						try {
 							long start = System.currentTimeMillis();
 							db.connect();						
-							String id = db.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class));
+							String id = db.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class)).getID();
 							db.disconnect();
 							System.out.println("CREATE TIME for:"+index +"="+(System.currentTimeMillis()- start)+" ms" + " ID:"+id);														
 
 							start = System.currentTimeMillis();
 							db.connect();																											
-							id = db.updateAnnotation(id, jsonMapper.readValue(JsonTestData.ANNOTATION_UPDATE, Annotation.class));
+							id = db.updateAnnotation(id, jsonMapper.readValue(JsonTestData.ANNOTATION_UPDATE, Annotation.class)).getID();
 							db.disconnect();
 							System.out.println("UPDATE TIME for:"+index +"="+(System.currentTimeMillis()- start)+" ms");
 					
@@ -89,7 +89,7 @@ public class ConcurrentTest {
 		String id = null;
 		try {
 			db1.connect();
-			id = db1.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class));
+			id = db1.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class)).getID();
 			
 			db2.connect();
 			

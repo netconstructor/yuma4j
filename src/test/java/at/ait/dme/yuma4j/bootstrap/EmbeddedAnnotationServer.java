@@ -4,9 +4,11 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.codehaus.jackson.JsonParseException;
-import org.codehaus.jackson.map.JsonMappingException;
-import org.codehaus.jackson.map.ObjectMapper;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpPost;
+import org.apache.http.entity.StringEntity;
+import org.apache.http.impl.client.DefaultHttpClient;
 import org.jboss.resteasy.logging.Logger;
 import org.mortbay.jetty.Connector;
 import org.mortbay.jetty.Server;
@@ -14,11 +16,6 @@ import org.mortbay.jetty.bio.SocketConnector;
 import org.mortbay.jetty.webapp.WebAppContext;
 
 import at.ait.dme.yuma4j.bootstrap.testdata.JsonTestData;
-import at.ait.dme.yuma4j.db.AnnotationStore;
-import at.ait.dme.yuma4j.db.exception.AnnotationStoreException;
-import at.ait.dme.yuma4j.db.exception.InvalidAnnotationException;
-import at.ait.dme.yuma4j.model.Annotation;
-import at.ait.dme.yuma4j.server.config.ServerConfig;
 
 public class EmbeddedAnnotationServer {
 	
@@ -71,15 +68,14 @@ public class EmbeddedAnnotationServer {
 		}
 	}
 	
-	private static void insertTestData() throws AnnotationStoreException,
-		JsonParseException, JsonMappingException, InvalidAnnotationException, IOException {
-		
-		AnnotationStore db = ServerConfig.getInstance(null).getAnnotationStore();
-		
-		ObjectMapper jsonMapper = new ObjectMapper();
-		db.connect();
-		db.createAnnotation(jsonMapper.readValue(JsonTestData.ANNOTATION, Annotation.class));
-		db.disconnect();
+	private static void insertTestData() throws ClientProtocolException, IOException {
+		HttpClient httpClient = new DefaultHttpClient();
+					
+		StringEntity createEntity = new StringEntity(JsonTestData.ANNOTATION, "UTF-8");
+		createEntity.setContentType("application/json");
+		HttpPost createMethod = new HttpPost(getApplicationURL() + "/api/annotation");		
+		createMethod.setEntity(createEntity);
+		httpClient.execute(createMethod);
 		
 		log.info("Inserted testdata: " + JsonTestData.ANNOTATION);
 	}

@@ -42,7 +42,7 @@ public class LoginPage extends WebPage {
 	
 	private void signInAndRedirectToHomePage(YUMAWebSession session) {
 		try {
-			session.signInOpenId(OpenIdAuthenticator.getInstance(), pageParams);
+			session.signInOpenID(OpenIdAuthenticator.getInstance(), pageParams);
 			if (session.isSignedIn()) {
 				setResponsePage(Search.class);
 			}				

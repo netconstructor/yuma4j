@@ -20,11 +20,10 @@ public class YUMAWebSession extends AuthenticatedWebSession {
         super(request);
     }
 	
-	public void signInOpenId(OpenIdAuthenticator authenticator, PageParameters pageParameters) 
-		throws MessageException, DiscoveryException, AssociationException, ConsumerException
-	{
-		boolean openIdAuthenticated = authenticator.authenticationSuccess(pageParameters);
-		signIn(openIdAuthenticated);
+	public void signInOpenID(OpenIdAuthenticator authenticator, PageParameters pageParameters) 
+		throws MessageException, DiscoveryException, AssociationException, ConsumerException {
+		
+		signIn(authenticator.authenticationSuccess(pageParameters));
 	}
 		
     @Override

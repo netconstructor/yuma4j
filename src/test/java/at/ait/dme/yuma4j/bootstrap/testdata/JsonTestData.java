@@ -9,7 +9,7 @@ public class JsonTestData {
 		  "\"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , "+
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
@@ -25,7 +25,7 @@ public class JsonTestData {
 		  "\"modified\" : 1224043200000 , " +
           "\"created\" : 1224043200000 , " +
           "\"creator\" : { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , " +
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" } , " +
@@ -37,7 +37,7 @@ public class JsonTestData {
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , " +
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";
@@ -46,7 +46,7 @@ public class JsonTestData {
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , " +
           "\"creator\" :  { \"username\" : \"guest\" } , " +
-          "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+          "\"fragment\" : \"xywh=10,10,100,100\" , " +
           "\"mediatype\" : \"IMAGE\" , " +
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\"" +
         "}";
@@ -54,7 +54,7 @@ public class JsonTestData {
 	public static final String INVALID_ANNOTATION_NO_CREATOR =
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , "+
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
@@ -63,7 +63,7 @@ public class JsonTestData {
 	public static final String INVALID_ANNOTATION_NO_CREATED =
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
@@ -72,7 +72,7 @@ public class JsonTestData {
 	public static final String INVALID_ANNOTATION_NO_MODIFIED =
 		"{ \"created\" : 1224043200000 , "+
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"mediatype\" : \"IMAGE\" , "+
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
@@ -82,7 +82,7 @@ public class JsonTestData {
 		"{ \"modified\" : 1224043200000 , "+
 		  "\"created\" : 1224043200000 , "+
 		  "\"creator\" :  { \"username\" : \"guest\" } , " +
-		  "\"fragment\" : \"bbox(10,10,100,100)\" , " +
+		  "\"fragment\" : \"xywh=10,10,100,100\" , " +
 		  "\"objectURI\" : \"http://dme.ait.ac.at/object/lissabon.jpg\" , " +
 		  "\"context\" : { \"uri\" : \"http://dme.ait.ac.at/object/lissabon.html\" }" +
 		"}";

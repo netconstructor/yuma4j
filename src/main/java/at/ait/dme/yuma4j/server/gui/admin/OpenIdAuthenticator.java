@@ -12,7 +12,6 @@ import org.openid4java.consumer.InMemoryNonceVerifier;
 import org.openid4java.consumer.VerificationResult;
 import org.openid4java.discovery.DiscoveryException;
 import org.openid4java.discovery.DiscoveryInformation;
-import org.openid4java.discovery.Identifier;
 import org.openid4java.message.AuthRequest;
 import org.openid4java.message.MessageException;
 import org.openid4java.message.ParameterList;
@@ -22,9 +21,21 @@ import at.ait.dme.yuma4j.server.gui.WicketApplication;
 
 public class OpenIdAuthenticator {
 
+	private static OpenIdAuthenticator instance;
+	
 	private ConsumerManager consumerManager;
 	private DiscoveryInformation discoveryInformation;
-		
+	
+	private OpenIdAuthenticator() {
+	}
+	
+	public static OpenIdAuthenticator getInstance() {
+		if (instance == null) {
+			instance = new OpenIdAuthenticator();
+		}
+		return instance;
+	}
+	
 	public void performAuthentication(String userSuppliedId)
 		throws Exception 
 	{
@@ -41,8 +52,7 @@ public class OpenIdAuthenticator {
 			getServerBaseUrl(), 
 			response, 
 			discoveryInformation);
-		Identifier verifiedIdentifier = verificationResult.getVerifiedId();
-		return verifiedIdentifier != null;
+		return verificationResult.getVerifiedId() != null;
 	}
 
 	@SuppressWarnings("unchecked")

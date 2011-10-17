@@ -15,7 +15,6 @@ import at.ait.dme.yuma4j.server.gui.admin.OpenIdAuthenticator;
 public class YUMAWebSession extends AuthenticatedWebSession {
 
 	private static final long serialVersionUID = -6703698595455093437L;
-	private boolean openIdAuthenticated;
 	
 	public YUMAWebSession(Request request) {
         super(request);
@@ -24,7 +23,8 @@ public class YUMAWebSession extends AuthenticatedWebSession {
 	public void signInOpenId(OpenIdAuthenticator authenticator, PageParameters pageParameters) 
 		throws MessageException, DiscoveryException, AssociationException, ConsumerException
 	{
-		openIdAuthenticated = authenticator.authenticationSuccess(pageParameters);
+		boolean openIdAuthenticated = authenticator.authenticationSuccess(pageParameters);
+		signIn(openIdAuthenticated);
 	}
 		
     @Override
@@ -35,7 +35,7 @@ public class YUMAWebSession extends AuthenticatedWebSession {
     
     @Override
     public Roles getRoles() {
-        if (isSignedIn() || openIdAuthenticated)
+        if (isSignedIn())
             return new Roles(Roles.ADMIN);
 
         return null;

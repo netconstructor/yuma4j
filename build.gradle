@@ -34,6 +34,7 @@ dependencies {
 	compile 'com.hp.hpl.jena:jena:2.6.4'
 	compile 'rome:rome:1.0'
 	compile 'rome:opensearch:0.1'
+	compile 'org.openid4java:openid4java-consumer:0.9.6'
 	
 	testCompile 'junit:junit:4.8.2'
 	testCompile 'org.hsqldb:hsqldb:2.2.4'

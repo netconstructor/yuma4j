@@ -10,6 +10,9 @@
   * A reply MAY always be deleted by the owner
   * A reply MAY always be edited by the owner
   * In the UI, replies are sorted by creation date
+* Modify OpenID so that it covers the API, not the admin GUI
+* Add "Log in with your Google Account" (note: just use http://www.google.com/accounts/o8/id as
+  OpenID -> will redirect to Google page)
 * The whole project could really use a code review
 * Review/revise JavaDoc!
 * Make search results page URL bookmarkable

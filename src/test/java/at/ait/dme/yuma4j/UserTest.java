@@ -20,11 +20,11 @@ public class UserTest {
 		Assert.assertEquals(user, same);
 		Assert.assertFalse(user.equals(other));
 		
-		user.setGravatarHash("f9879d71855b5ff21e4963273a886bfc");
+		user.setAvatarURL("http://www.gravatar.com/avatar/f9879d71855b5ff21e4963273a886bfc");
 		user.setURI("http://www.myserver.com/foaf.rdf#guest");
 		Assert.assertFalse(user.equals(same));
 		
-		same.setGravatarHash("f9879d71855b5ff21e4963273a886bfc");
+		same.setAvatarURL("http://www.gravatar.com/avatar/f9879d71855b5ff21e4963273a886bfc");
 		same.setURI("http://www.myserver.com/foaf.rdf#guest");
 		Assert.assertTrue(user.equals(same));		
 	}

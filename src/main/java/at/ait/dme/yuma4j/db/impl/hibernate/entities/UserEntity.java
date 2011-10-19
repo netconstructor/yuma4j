@@ -16,7 +16,7 @@ public class UserEntity {
 	
 	private String userFullname = null;
 	
-	private String gravatarHash = null;
+	private String avatarURL= null;
 	
 	private String userURI = null;
 	
@@ -25,14 +25,14 @@ public class UserEntity {
 	public UserEntity(User user) {
 		this.setUsername(user.getUsername());
 		this.setName(user.getName());
-		this.setGravatarHash(user.getGravatarHash());
+		this.setAvatarURL(user.getAvatarURL());
 		this.setUri(user.getURI());
 	}
 	
 	public User toUser() {
 		User user = new User(username);
 		user.setName(userFullname);
-		user.setGravatarHash(gravatarHash);
+		user.setAvatarURL(avatarURL);
 		user.setURI(userURI);
 		return user;
 	}
@@ -53,12 +53,12 @@ public class UserEntity {
 		return userFullname;
 	}
 
-	public void setGravatarHash(String gravatarHash) {
-		this.gravatarHash = gravatarHash;
+	public void setAvatarURL(String avatarURL) {
+		this.avatarURL = avatarURL;
 	}
 
-	public String getGravatarHash() {
-		return gravatarHash;
+	public String getAvatarURL() {
+		return avatarURL;
 	}
 
 	public void setUri(String uri) {

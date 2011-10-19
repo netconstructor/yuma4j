@@ -21,9 +21,9 @@ public class User extends AbstractModelPOJO {
 	private String name = null;
 	
 	/**
-	 * The user's Gravatar hash (OPTIONAL) 
+	 * The user's avatar URL (OPTIONAL) 
 	 */
-	private String gravatarHash = null;
+	private String avatarURL = null;
 	
 	/**
 	 * The user's personal (e.g. FOAF) URI (OPTIONAL)
@@ -54,12 +54,12 @@ public class User extends AbstractModelPOJO {
 		this.name = name;
 	}
 
-	public String getGravatarHash() {
-		return gravatarHash;
+	public String getAvatarURL() {
+		return avatarURL;
 	}
 	
-	public void setGravatarHash(String gravatarHash) {
-		this.gravatarHash = gravatarHash;
+	public void setAvatarURL(String avatarURL) {
+		this.avatarURL = avatarURL;
 	}
 
 	public String getURI() {
@@ -86,7 +86,7 @@ public class User extends AbstractModelPOJO {
 		if (!equalsNullable(this.uri, user.uri))
 			return false;
 		
-		if (!equalsNullable(this.gravatarHash, user.gravatarHash))
+		if (!equalsNullable(this.avatarURL, user.avatarURL))
 			return false;
 		
 		return true;

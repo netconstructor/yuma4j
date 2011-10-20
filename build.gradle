@@ -1,10 +1,16 @@
 apply plugin: 'java'
 apply plugin: 'war'
 apply plugin: 'eclipse'
+apply plugin: 'jetty'
 
 sourceCompatibility = 1.6
 
 files("src") 
+
+// Jetty config
+httpPort = 8081
+jettyRun.contextPath = '/yuma4j-server'
+jettyRunWar.contextPath = '/yuma4j-server'
 
 repositories {
 	mavenCentral()
@@ -15,11 +21,6 @@ eclipse {
 	classpath {	
 		classesOutputDir = file('src/main/webapp/WEB-INF/classes')
 	}
-}
-
-task(startDemoServer, dependsOn: 'testClasses', type: JavaExec) {
-	main = 'at.ait.dme.yuma4j.bootstrap.EmbeddedAnnotationServer'
-	classpath = sourceSets.test.runtimeClasspath
 }
 
 dependencies {

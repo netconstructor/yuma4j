@@ -5,7 +5,17 @@ apply plugin: 'jetty'
 
 sourceCompatibility = 1.6
 
-files("src") 
+sourceSets {
+    main {
+        java {
+            srcDir 'src/main/java'
+        }
+        resources {
+            srcDir 'src/main/resources'
+            srcDir 'src/main/java'
+        }
+    }
+}
 
 // Jetty config
 httpPort = 8081

@@ -26,7 +26,7 @@ annotation.
  
 Note that we have also set up a publicly accessible demo server instance at
 
-http://dme.ait.ac.at/yuma4j-server
+http://dme.ait.ac.at/yuma4j-server-new
 
 Feel free to point your page to this server __for testing purposes__. Keep in mind though that 
 we __do not make any guarantees__ on this server in terms of 
